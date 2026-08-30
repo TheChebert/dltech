@@ -4,6 +4,10 @@ test("homepage presents the Driftline offer and product platform", async ({ page
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Custom solutions");
   await expect(page.getByRole("link", { name: "Explore services" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Driftline Tech home" }).locator("img")).toHaveAttribute(
+    "src",
+    /Driftline-Tech-Reversed-Dark\.svg/,
+  );
   await expect(page.getByText("EzeBay Listing Manager", { exact: true }).first()).toBeVisible();
 });
 
