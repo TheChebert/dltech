@@ -7,7 +7,7 @@ import { MarketingShell } from "@/components/marketing-shell";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Start a project, ask about Driftline software, or request support from Driftline Tech.",
+  description: "Start a project, ask about services, or request support from Driftline Tech.",
   alternates: { canonical: "/contact" },
 };
 
