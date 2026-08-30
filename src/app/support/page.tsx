@@ -7,22 +7,22 @@ import { MarketingShell } from "@/components/marketing-shell";
 
 export const metadata: Metadata = {
   title: "Support",
-  description: "Product help, account and license support, documentation, downloads, and contact options for Driftline Tech customers.",
+  description: "Project, website, system, and ongoing service support for Driftline Tech customers.",
   alternates: { canonical: "/support" },
 };
 
 export default function SupportPage() {
   return (
     <MarketingShell>
-      <InnerHero eyebrow="Support" title="Find the right path for product, account, or project help." description="The support platform is ready to grow with Driftline products. Public documentation and customer-only resources will be added as products move toward release." />
+      <InnerHero eyebrow="Support" title="Find the right path for project or service help." description="For active engagements and systems supported by Driftline, share what is happening and we will help route the request to the right next step." />
       <section className="bg-[#f6f9fd] py-20">
         <div className="page-shell grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {[
-            [BookOpen, "Documentation", "Product setup, workflows, integrations, and release information.", "/software"],
-            [KeyRound, "Account & licensing", "Access purchased products, entitlements, licenses, and activated devices.", "/account"],
-            [Download, "Downloads & updates", "Secure release downloads and current version information for entitled customers.", "/account"],
-            [RefreshCw, "Release information", "Version notes, supported channels, and minimum supported releases.", "/software"],
-            [LifeBuoy, "Contact support", "Tell us what happened, the product or system involved, and the impact.", "/contact?topic=support"],
+            [BookOpen, "Project documentation", "Questions about plans, handoff guidance, decisions, or materials from an active engagement.", "/contact?topic=support"],
+            [KeyRound, "Access & account help", "Help with secure access to a website, application, or system that Driftline supports.", "/contact?topic=support"],
+            [Download, "Updates & handoff", "Deployment, version, or handoff support for an active customer system.", "/contact?topic=support"],
+            [RefreshCw, "Ongoing maintenance", "Monitoring, improvements, incident response, and planned technical care.", "/services/support-maintenance"],
+            [LifeBuoy, "Contact support", "Tell us what happened, the system involved, and the impact on your team or customers.", "/contact?topic=support"],
           ].map(([Icon, title, description, href]) => {
             const IconComponent = Icon as typeof BookOpen;
             return (
@@ -41,7 +41,7 @@ export default function SupportPage() {
           <p className="section-kicker">Before submitting a support request</p>
           <h2 className="mt-3 text-3xl font-semibold text-slate-950">Include enough context to reproduce the problem.</h2>
           <ul className="mt-8 grid gap-3 text-sm leading-6 text-slate-700 sm:grid-cols-2">
-            {["Product and version", "Operating system or browser", "What you expected", "What happened instead", "Steps already tried", "Screenshots without private information"].map((item) => <li key={item} className="flex gap-3 rounded-xl bg-slate-50 p-4"><span className="mt-2 size-1.5 rounded-full bg-blue-600" />{item}</li>)}
+            {["System, page, or workflow", "Operating system or browser", "What you expected", "What happened instead", "Steps already tried", "Screenshots without private information"].map((item) => <li key={item} className="flex gap-3 rounded-xl bg-slate-50 p-4"><span className="mt-2 size-1.5 rounded-full bg-blue-600" />{item}</li>)}
           </ul>
         </div>
       </section>

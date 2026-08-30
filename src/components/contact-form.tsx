@@ -53,7 +53,6 @@ export function ContactForm() {
           What can we help with?
           <select name="topic" defaultValue="project" className="h-12 rounded-lg border border-slate-300 bg-white px-3 text-base text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-3 focus:ring-blue-100">
             <option value="project">New project</option>
-            <option value="product">Driftline product</option>
             <option value="support">Support request</option>
             <option value="consulting">Technology consulting</option>
             <option value="other">Something else</option>

@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Driftline Tech",
     short_name: "Driftline",
-    description: "Custom software, websites, automation, AI solutions, and Driftline software products.",
+    description: "Custom software, websites, automation, AI solutions, and connected business systems.",
     start_url: "/",
     display: "standalone",
     background_color: "#06111e",

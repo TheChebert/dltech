@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     default: "Driftline Tech | Custom Software & Digital Solutions",
     template: "%s | Driftline Tech",
   },
-  description: "Driftline Tech builds modern websites, custom applications, automation, AI solutions, and practical software for growing businesses.",
+  description: "Driftline Tech builds modern websites, custom applications, automation, AI solutions, and connected systems for growing businesses.",
   applicationName: "Driftline Tech",
   category: "technology",
   icons: {
@@ -27,14 +27,14 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Driftline Tech",
     title: "Driftline Tech | Custom Software & Digital Solutions",
-    description: "Modern websites, custom applications, automation, AI solutions, and practical software built for real-world business needs.",
+    description: "Modern websites, custom applications, automation, AI solutions, and connected systems built for real-world business needs.",
     url: "/",
     images: [{ url: "/og.png", width: 1734, height: 907, alt: "Driftline Tech — Custom Solutions. Powerful Software. Real Results." }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Driftline Tech | Custom Software & Digital Solutions",
-    description: "Modern websites, custom applications, automation, AI solutions, and practical software.",
+    description: "Modern websites, custom applications, automation, AI solutions, and connected systems.",
     images: ["/og.png"],
   },
 };
@@ -46,7 +46,7 @@ const organization = {
   url: siteOrigin,
   logo: siteOrigin + "/brand/Driftline-Tech-Primary-Logo.svg",
   email: "hello@driftlinetech.com",
-  description: "Software products, custom software, web design, automation, AI solutions, integrations, support, and technology consulting.",
+  description: "Custom software, web design, automation, AI solutions, integrations, support, and technology consulting.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
