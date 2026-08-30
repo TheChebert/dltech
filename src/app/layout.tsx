@@ -18,6 +18,10 @@ export const metadata: Metadata = {
   description: "Driftline Tech builds modern websites, custom applications, automation, AI solutions, and practical software for growing businesses.",
   applicationName: "Driftline Tech",
   category: "technology",
+  icons: {
+    icon: [{ url: "/brand/Driftline-Tech-App-Icon-Color.svg", type: "image/svg+xml" }],
+    shortcut: "/brand/Driftline-Tech-App-Icon-Color.svg",
+  },
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -40,7 +44,7 @@ const organization = {
   "@type": "Organization",
   name: "Driftline Tech",
   url: siteOrigin,
-  logo: siteOrigin + "/brand/dltech.svg",
+  logo: siteOrigin + "/brand/Driftline-Tech-Primary-Logo.svg",
   email: "hello@driftlinetech.com",
   description: "Software products, custom software, web design, automation, AI solutions, integrations, support, and technology consulting.",
 };

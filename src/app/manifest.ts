@@ -9,6 +9,6 @@ export default function manifest(): MetadataRoute.Manifest {
     display: "standalone",
     background_color: "#06111e",
     theme_color: "#06111e",
-    icons: [{ src: "/icon.svg", sizes: "any", type: "image/svg+xml" }],
+    icons: [{ src: "/brand/Driftline-Tech-App-Icon-Color.svg", sizes: "any", type: "image/svg+xml" }],
   };
 }
