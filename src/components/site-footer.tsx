@@ -16,21 +16,15 @@ const footerLinks = [
     ],
   },
   {
-    title: "Software",
-    links: [
-      ["All software", "/software"],
-      ["EzeBay Listing Manager", "/software/ezebay-listing-manager"],
-      ["Easy File Editor", "/software/easy-file-editor"],
-      ["Viewsaic", "/software/viewsaic"],
-      ["Customer account", "/account"],
-    ],
-  },
-  {
     title: "Company",
     links: [
       ["About", "/about"],
-      ["Work", "/work"],
       ["Contact", "/contact"],
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
       ["Support", "/support"],
       ["System API", "/api/v1/health"],
     ],
@@ -40,7 +34,6 @@ const footerLinks = [
     links: [
       ["Privacy", "/legal/privacy"],
       ["Terms", "/legal/terms"],
-      ["Software license framework", "/legal/software-license"],
     ],
   },
 ];
@@ -83,7 +76,7 @@ export function SiteFooter() {
       </div>
       <div className="page-shell flex flex-col gap-2 border-t border-white/10 py-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
         <p>© {new Date().getFullYear()} Driftline Tech, LLC. All rights reserved.</p>
-        <p>Professional provisional content. Product availability is shown where known.</p>
+        <p>Service scope and availability are confirmed during discovery.</p>
       </div>
     </footer>
   );

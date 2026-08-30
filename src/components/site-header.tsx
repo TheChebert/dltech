@@ -10,8 +10,6 @@ import { cn } from "@/lib/utils";
 
 const navigation = [
   { label: "Services", href: "/services" },
-  { label: "Software", href: "/software" },
-  { label: "Work", href: "/work" },
   { label: "About", href: "/about" },
   { label: "Resources", href: "/support" },
 ];
@@ -39,9 +37,6 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <Link href="/account" className="px-3 py-2 text-sm font-medium text-slate-300 hover:text-white">
-            Sign in
-          </Link>
           <Link
             href="/contact"
             className={cn(buttonVariants({ size: "lg" }), "h-11 rounded-lg bg-blue-600 px-5 text-white shadow-lg shadow-blue-950/30 hover:bg-blue-500")}
@@ -69,10 +64,7 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
-            <div className="mt-3 grid grid-cols-2 gap-3 border-t border-white/10 pt-4">
-              <Link href="/account" onClick={() => setOpen(false)} className="flex h-11 items-center justify-center rounded-lg border border-white/15 text-sm font-medium text-white">
-                Sign in
-              </Link>
+            <div className="mt-3 border-t border-white/10 pt-4">
               <Link href="/contact" onClick={() => setOpen(false)} className="flex h-11 items-center justify-center rounded-lg bg-blue-600 text-sm font-medium text-white">
                 Get in touch
               </Link>

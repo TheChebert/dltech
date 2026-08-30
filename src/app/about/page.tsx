@@ -7,14 +7,14 @@ import { MarketingShell } from "@/components/marketing-shell";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Learn how Driftline Tech approaches software, websites, automation, and long-term platform ownership.",
+  description: "Learn how Driftline Tech approaches custom software, websites, automation, and long-term system ownership.",
   alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {
   return (
     <MarketingShell>
-      <InnerHero eyebrow="About Driftline" title="A software company built around useful systems and clear ownership." description="Driftline Tech develops its own products and helps businesses design, build, connect, and support digital systems. That dual perspective keeps the work grounded in what it takes to operate software after launch." />
+      <InnerHero eyebrow="About Driftline" title="A technology company built around useful systems and clear ownership." description="Driftline Tech helps businesses design, build, connect, and support digital systems. The work stays grounded in what it takes to operate and improve technology after launch." />
       <section className="bg-white py-20 sm:py-24">
         <div className="page-shell grid gap-12 lg:grid-cols-2">
           <div>
@@ -24,7 +24,7 @@ export default function AboutPage() {
           <div className="space-y-5 text-base leading-8 text-slate-600">
             <p>We approach websites as business systems, custom applications as operated products, and automation as software that needs ownership and failure handling.</p>
             <p>That means making design quality, security, performance, maintainability, documentation, and deployment reliability part of the same conversation.</p>
-            <p>Where details are still evolving—especially for Driftline-owned products—we say so plainly. Credibility is built by being specific about what exists, what was tested, and what remains to be decided.</p>
+            <p>Where project details are still evolving, we say so plainly. Credibility is built by being specific about what exists, what was tested, and what remains to be decided.</p>
           </div>
         </div>
       </section>
