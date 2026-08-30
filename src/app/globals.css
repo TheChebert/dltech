@@ -1,0 +1,207 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --radius-sm: calc(var(--radius) * .6);
+  --radius-md: calc(var(--radius) * .8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+}
+
+:root {
+  --background: #f7faff;
+  --foreground: #0b1626;
+  --card: #ffffff;
+  --card-foreground: #0b1626;
+  --popover: #ffffff;
+  --popover-foreground: #0b1626;
+  --primary: #006efd;
+  --primary-foreground: #ffffff;
+  --secondary: #eaf3ff;
+  --secondary-foreground: #0b1626;
+  --muted: #eef4fa;
+  --muted-foreground: #5d6b7b;
+  --accent: #dff7ff;
+  --accent-foreground: #0b4f8a;
+  --destructive: #dc2626;
+  --border: #dbe5ef;
+  --input: #dbe5ef;
+  --ring: #00a8f3;
+  --radius: .75rem;
+}
+
+.dark {
+  --background: #06111e;
+  --foreground: #f6f9fc;
+  --card: #0a1d30;
+  --card-foreground: #f6f9fc;
+  --popover: #0a1d30;
+  --popover-foreground: #f6f9fc;
+  --primary: #1681ff;
+  --primary-foreground: #ffffff;
+  --secondary: #102942;
+  --secondary-foreground: #f6f9fc;
+  --muted: #10263c;
+  --muted-foreground: #9badbf;
+  --accent: #0d3352;
+  --accent-foreground: #bcecff;
+  --destructive: #ef4444;
+  --border: rgb(255 255 255 / 12%);
+  --input: rgb(255 255 255 / 16%);
+  --ring: #38bdf8;
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  html { @apply font-sans; }
+  body { @apply bg-background text-foreground; }
+  ::selection { background: rgb(0 110 253 / 28%); }
+}
+
+@layer utilities {
+  .page-shell {
+    width: min(100% - 2rem, 90rem);
+    margin-inline: auto;
+  }
+
+  .text-gradient {
+    color: transparent;
+    background: linear-gradient(90deg, #1681ff 0%, #00c2ff 86%);
+    background-clip: text;
+    -webkit-background-clip: text;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    color: #77d7ff;
+    font-size: .75rem;
+    font-weight: 650;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .section-kicker {
+    color: #58c7ff;
+    font-size: .75rem;
+    font-weight: 650;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .hero-grid {
+    background-color: #06111e;
+    background-image:
+      linear-gradient(rgb(46 128 197 / 7%) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(46 128 197 / 7%) 1px, transparent 1px);
+    background-size: 54px 54px;
+    background-position: center center;
+  }
+
+  .hero-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 78% 43%, rgb(0 153 255 / 20%), transparent 31%),
+      radial-gradient(circle at 14% 88%, rgb(0 110 253 / 13%), transparent 35%),
+      linear-gradient(180deg, rgb(6 17 30 / 5%), #06111e 96%);
+  }
+
+  .product-surface {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 14%);
+    border-radius: 1.15rem;
+    background: rgb(6 17 30 / 84%);
+    box-shadow: 0 35px 90px rgb(0 3 12 / 58%), 0 0 80px rgb(0 126 255 / 10%);
+    backdrop-filter: blur(18px);
+  }
+
+  .product-surface::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(135deg, rgb(255 255 255 / 7%), transparent 32%);
+  }
+}
+
+@media (min-width: 48rem) {
+  .page-shell { width: min(100% - 3rem, 90rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+@layer components {
+  .legal-copy {
+    max-width: 58rem;
+    color: #334155;
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .legal-copy h2 {
+    margin-top: 2.5rem;
+    color: #0b1626;
+    font-size: 1.35rem;
+    font-weight: 650;
+    letter-spacing: -.02em;
+  }
+
+  .legal-copy p {
+    margin-top: .75rem;
+  }
+
+  .legal-copy a {
+    color: #006efd;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .legal-notice {
+    margin-top: 0 !important;
+    border: 1px solid #bfdbfe;
+    border-radius: .75rem;
+    background: #eff6ff;
+    padding: 1rem;
+    color: #1e40af;
+    font-size: .875rem;
+    line-height: 1.5rem;
+  }
+}
+

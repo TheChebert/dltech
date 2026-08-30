@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Driftline Tech black app icon</title>
+  <desc id="desc">A solid black forward-chevron mark on a rounded white square.</desc>
+  <rect id="white-rounded-background" x="16" y="16" width="480" height="480" rx="112" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="4"/>
+  <g id="black-app-icon-mark" transform="translate(61 119) scale(1.02)" fill="#000000">
+    <path id="black-upper-chevron" d="M118 0H250C275 0 293 9 311 29L356 79C377 103 373 132 350 151L301 185C317 160 316 140 299 120L253 67C243 55 232 49 215 49H145Z"/>
+    <path id="black-center-chevron" d="M211 64H269C283 64 293 69 303 81L330 113C353 140 353 170 329 195L247 253C235 261 220 265 204 265H137L263 154C269 149 269 143 264 137Z"/>
+    <path id="black-lower-chevron" d="M18 265L136 166C145 159 155 156 167 156H239L105 265Z"/>
+  </g>
+</svg>

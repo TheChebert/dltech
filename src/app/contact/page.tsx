@@ -1,0 +1,35 @@
+import type { Metadata } from "next";
+import { Mail, MapPin, ShieldCheck } from "lucide-react";
+
+import { ContactForm } from "@/components/contact-form";
+import { InnerHero } from "@/components/inner-hero";
+import { MarketingShell } from "@/components/marketing-shell";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "Start a project, ask about Driftline software, or request support from Driftline Tech.",
+  alternates: { canonical: "/contact" },
+};
+
+export default function ContactPage() {
+  return (
+    <MarketingShell>
+      <InnerHero eyebrow="Contact" title="Tell us what needs to work better." description="Share the problem, the business context, and the outcome you are aiming for. If it is a fit for Driftline, we will continue the conversation with a practical next step." />
+      <section className="bg-[#f6f9fd] py-20 sm:py-24">
+        <div className="page-shell grid gap-10 lg:grid-cols-[.78fr_1.22fr]">
+          <div>
+            <p className="section-kicker">Start here</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-[-.035em] text-slate-950">A useful first message does not need to be a full specification.</h2>
+            <p className="mt-4 text-base leading-7 text-slate-600">A short description of the current situation, who is affected, and what success looks like is enough to begin.</p>
+            <div className="mt-8 space-y-4">
+              <a href="mailto:hello@driftlinetech.com" className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium text-slate-800 hover:border-blue-300"><Mail className="size-5 text-blue-600" />hello@driftlinetech.com</a>
+              <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium text-slate-800"><MapPin className="size-5 text-blue-600" />Remote-first collaboration</div>
+              <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium text-slate-800"><ShieldCheck className="size-5 text-blue-600" />Please do not send passwords, keys, or sensitive customer data</div>
+            </div>
+          </div>
+          <ContactForm />
+        </div>
+      </section>
+    </MarketingShell>
+  );
+}

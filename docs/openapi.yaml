@@ -1,0 +1,281 @@
+openapi: 3.1.0
+info:
+  title: Driftline Tech Platform API
+  version: 1.0.0
+  description: Versioned public health, release discovery, and license lifecycle API.
+servers:
+  - url: https://dltech.vercel.app/api/v1
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      summary: Check service health
+      responses:
+        "200":
+          description: Service is available.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Health"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /products/{slug}/releases/latest:
+    get:
+      operationId: getLatestRelease
+      summary: Return the latest published release for a product
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Latest published release metadata.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Release"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /licenses/activate:
+    post:
+      operationId: activateLicense
+      summary: Activate a license for one installation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ActivationRequest"
+      responses:
+        "200":
+          description: License activated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LicenseResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /licenses/validate:
+    post:
+      operationId: validateLicense
+      summary: Validate an active installation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ValidationRequest"
+      responses:
+        "200":
+          description: Current license status.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LicenseResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /licenses/deactivate:
+    post:
+      operationId: deactivateLicense
+      summary: Deactivate one installation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeactivationRequest"
+      responses:
+        "200":
+          description: Installation deactivated.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok]
+                properties:
+                  ok:
+                    type: boolean
+                    const: true
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+components:
+  schemas:
+    Health:
+      type: object
+      required: [status, service, version]
+      properties:
+        status:
+          type: string
+          const: ok
+        service:
+          type: string
+        version:
+          type: string
+    Release:
+      type: object
+      required: [product, version, publishedAt, platforms]
+      properties:
+        product:
+          type: string
+        version:
+          type: string
+        releaseNotes:
+          type: [string, "null"]
+        publishedAt:
+          type: string
+          format: date-time
+        platforms:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    SignedRequest:
+      type: object
+      required: [timestamp, nonce]
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        nonce:
+          type: string
+          minLength: 16
+          maxLength: 200
+    ActivationRequest:
+      allOf:
+        - $ref: "#/components/schemas/SignedRequest"
+        - type: object
+          required: [licenseKey, productSlug, installationId]
+          properties:
+            licenseKey:
+              type: string
+              minLength: 12
+              maxLength: 200
+            productSlug:
+              type: string
+            installationId:
+              type: string
+              minLength: 8
+              maxLength: 500
+            deviceName:
+              type: string
+              maxLength: 120
+    ValidationRequest:
+      allOf:
+        - $ref: "#/components/schemas/SignedRequest"
+        - type: object
+          required: [licenseKey, productSlug, installationId, activationToken]
+          properties:
+            licenseKey:
+              type: string
+            productSlug:
+              type: string
+            installationId:
+              type: string
+            activationToken:
+              type: string
+    DeactivationRequest:
+      allOf:
+        - $ref: "#/components/schemas/ValidationRequest"
+    LicenseResponse:
+      type: object
+      required: [valid, status]
+      properties:
+        valid:
+          type: boolean
+        status:
+          type: string
+        activationToken:
+          type: string
+          description: Present only after successful activation.
+        expiresAt:
+          type: [string, "null"]
+          format: date-time
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+  responses:
+    BadRequest:
+      description: Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Unauthorized:
+      description: Credentials or activation token are invalid.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Forbidden:
+      description: The license or entitlement does not permit the operation.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Conflict:
+      description: Activation limit or replay protection conflict.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    RateLimited:
+      description: Too many requests.
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    ServiceUnavailable:
+      description: Required server configuration or dependency is unavailable.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
