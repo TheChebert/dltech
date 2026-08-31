@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Mail, MapPin, ShieldCheck } from "lucide-react";
+import { Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
 
 import { ContactForm } from "@/components/contact-form";
 import { InnerHero } from "@/components/inner-hero";
@@ -28,6 +28,7 @@ export default async function ContactPage({ searchParams }: PageProps<"/contact"
             <p className="mt-4 text-base leading-7 text-slate-600">A short description of the current situation, who is affected, and what success looks like is enough to begin.</p>
             <div className="mt-8 space-y-4">
               <a href="mailto:hello@driftlinetech.com" className="flex items-center gap-4 surface-panel rounded-xl border border-slate-300/80 p-4 text-sm font-medium text-slate-800 hover:border-blue-300"><Mail className="size-5 text-blue-600" />hello@driftlinetech.com</a>
+              <a href="tel:+16085020949" className="flex items-center gap-4 surface-panel rounded-xl border border-slate-300/80 p-4 text-sm font-medium text-slate-800 hover:border-blue-300"><Phone className="size-5 text-blue-600" />608-502-0949</a>
               <div className="flex items-center gap-4 surface-panel rounded-xl border border-slate-300/80 p-4 text-sm font-medium text-slate-800"><MapPin className="size-5 text-blue-600" />Remote-first collaboration</div>
               <div className="flex items-center gap-4 surface-panel rounded-xl border border-slate-300/80 p-4 text-sm font-medium text-slate-800"><ShieldCheck className="size-5 text-blue-600" />Please do not send passwords, keys, or sensitive customer data</div>
             </div>
