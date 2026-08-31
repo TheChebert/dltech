@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -64,7 +65,7 @@ export default function Home() {
 
       <section data-surface="dark" className="hero-grid relative border-b border-white/10">
         <div className="hero-glow" aria-hidden="true" />
-        <div className="page-shell relative grid min-h-[690px] items-center gap-14 py-20 lg:grid-cols-[1.02fr_.98fr] lg:py-24">
+        <div className="page-shell relative grid min-h-[690px] items-center gap-14 py-20 lg:grid-cols-[1.02fr_.98fr] lg:pb-10 lg:pt-20">
           <div className="max-w-3xl">
             <div className="eyebrow mb-7"><Sparkles className="size-4" aria-hidden="true" /> Websites, applications, and connected systems</div>
             <h1 className="text-balance text-5xl font-semibold leading-[1.02] tracking-[-0.055em] sm:text-6xl xl:text-[4.75rem]">
@@ -89,54 +90,17 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-[650px] lg:mx-0">
-            <div className="product-surface">
-              <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-                <div className="flex items-center gap-2" aria-hidden="true">
-                  <span className="size-2.5 rounded-full bg-rose-400/80" />
-                  <span className="size-2.5 rounded-full bg-amber-300/80" />
-                  <span className="size-2.5 rounded-full bg-emerald-300/80" />
-                </div>
-                <span className="text-xs font-medium tracking-wide text-slate-400">DELIVERY OVERVIEW</span>
-              </div>
-              <div className="grid gap-4 p-5 sm:grid-cols-[1.15fr_.85fr]">
-                <div className="rounded-xl border border-white/10 bg-[#0a1d30] p-5">
-                  <div className="mb-8 flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-xs font-medium uppercase tracking-[0.18em] text-sky-400">Capability overview</p>
-                      <h2 className="mt-2 text-2xl font-semibold tracking-tight">Built around your business</h2>
-                    </div>
-                    <CloudCog className="size-6 text-sky-400" aria-hidden="true" />
-                  </div>
-                  <div className="space-y-3">
-                    {["Web experiences", "Custom applications", "Automation & integrations"].map((capability, index) => (
-                      <div key={capability} className="flex items-center gap-3 rounded-lg border border-white/8 bg-white/[.035] p-3">
-                        <span className={cn("flex size-9 items-center justify-center rounded-lg", index === 0 ? "bg-emerald-400/15 text-emerald-300" : index === 1 ? "bg-violet-400/15 text-violet-300" : "bg-sky-400/15 text-sky-300")}>
-                          {index === 0 ? <Workflow className="size-4" /> : index === 1 ? <Braces className="size-4" /> : <Layers3 className="size-4" />}
-                        </span>
-                        <span className="min-w-0 flex-1 text-sm font-medium text-slate-100">{capability}</span>
-                        <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,.65)]" aria-hidden="true" />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="grid gap-4">
-                  <div className="rounded-xl border border-sky-400/20 bg-gradient-to-br from-blue-600/20 to-sky-400/5 p-5">
-                    <p className="text-xs text-slate-400">Connected delivery</p>
-                    <p className="mt-3 text-2xl font-semibold">One clear plan</p>
-                    <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-white/10" aria-hidden="true"><div className="h-full w-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-300" /></div>
-                    <p className="mt-3 text-xs leading-5 text-slate-400">Strategy, experience, engineering, integration, and support stay aligned.</p>
-                  </div>
-                  <div className="rounded-xl border border-white/10 bg-[#0a1d30] p-5">
-                    <p className="text-xs text-slate-400">Operating principle</p>
-                    <div className="mt-4 flex items-center gap-3"><span className="size-2.5 rounded-full bg-emerald-400" aria-hidden="true" /><span className="text-sm font-medium">Built to be owned</span></div>
-                    <div className="mt-6 flex h-16 items-end gap-1.5" aria-hidden="true">
-                      {[36, 52, 44, 68, 58, 82, 72, 94, 84, 100].map((height, index) => <span key={index} className="flex-1 rounded-t-sm bg-gradient-to-t from-blue-600/60 to-cyan-300/90" style={{ height: height + "%" }} />)}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="hero-device-stage relative mx-auto flex w-full items-end justify-center lg:-mr-[clamp(1rem,4vw,4.5rem)] lg:min-h-[500px] lg:self-end">
+            <Image
+              src="/brand/Driftline-Tech-Hero-Devices-v2.png"
+              alt="Laptop and smartphone displaying Driftline Tech digital solutions."
+              width={1827}
+              height={861}
+              loading="eager"
+              fetchPriority="high"
+              sizes="(max-width: 1023px) calc(100vw - 2rem), (max-width: 1439px) 56vw, 940px"
+              className="relative z-10 h-auto w-full max-w-[820px] object-contain lg:w-[118%] lg:max-w-none xl:w-[125%]"
+            />
           </div>
         </div>
       </section>
@@ -160,6 +124,19 @@ export default function Home() {
               </article>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section id="how-we-deliver" data-surface="dark" className="relative border-t border-white/10 bg-[#081827] py-20 sm:py-24">
+        <div className="page-shell grid items-center gap-12 lg:grid-cols-[.72fr_1.28fr] xl:gap-16">
+          <div className="max-w-xl">
+            <p className="section-kicker">How we deliver</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">Built around your business.</h2>
+            <p className="mt-5 text-base leading-7 text-slate-400 sm:text-lg sm:leading-8">
+              Every engagement is shaped around your goals, existing systems, and the way your team actually works. We combine strategy, design, engineering, automation, integration, and ongoing support into one practical delivery process.
+            </p>
+          </div>
+          <DeliveryOverview />
         </div>
       </section>
 
@@ -223,5 +200,62 @@ export default function Home() {
       </section>
       <SiteFooter />
     </main>
+  );
+}
+
+function DeliveryOverview() {
+  const stages = ["Discover", "Build", "Launch", "Improve"];
+
+  return (
+    <div className="delivery-surface w-full max-w-[780px] justify-self-end" aria-label="Driftline Tech delivery model">
+      <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+        <div className="flex items-center gap-2" aria-hidden="true">
+          <span className="size-2.5 rounded-full bg-rose-400/80" />
+          <span className="size-2.5 rounded-full bg-amber-300/80" />
+          <span className="size-2.5 rounded-full bg-emerald-300/80" />
+        </div>
+        <span className="text-xs font-medium tracking-wide text-slate-400">HOW WE DELIVER</span>
+      </div>
+      <div className="grid gap-4 p-4 sm:p-5 md:grid-cols-[1.08fr_.92fr]">
+        <div className="rounded-xl border border-white/10 bg-[#0a1d30] p-5">
+          <div className="mb-8 flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.18em] text-sky-400">Capability overview</p>
+              <p className="mt-2 text-2xl font-semibold tracking-tight">Built around your business</p>
+            </div>
+            <CloudCog className="size-6 shrink-0 text-sky-400" aria-hidden="true" />
+          </div>
+          <div className="space-y-3">
+            {["Web experiences", "Custom applications", "Automation & integrations"].map((capability, index) => (
+              <div key={capability} className="flex items-center gap-3 rounded-lg border border-white/8 bg-white/[.035] p-3">
+                <span className={cn("flex size-9 shrink-0 items-center justify-center rounded-lg", index === 0 ? "bg-emerald-400/15 text-emerald-300" : index === 1 ? "bg-violet-400/15 text-violet-300" : "bg-sky-400/15 text-sky-300")}>
+                  {index === 0 ? <Workflow className="size-4" aria-hidden="true" /> : index === 1 ? <Braces className="size-4" aria-hidden="true" /> : <Layers3 className="size-4" aria-hidden="true" />}
+                </span>
+                <span className="min-w-0 flex-1 text-sm font-medium text-slate-100">{capability}</span>
+                <span className="size-2 shrink-0 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,.65)]" aria-hidden="true" />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="grid gap-4">
+          <div className="rounded-xl border border-sky-400/20 bg-gradient-to-br from-blue-600/20 to-sky-400/5 p-5">
+            <p className="text-xs text-slate-400">Delivery stages</p>
+            <ol aria-label="Delivery stages" className="mt-4 grid grid-cols-2 gap-2">
+              {stages.map((stage, index) => (
+                <li key={stage} className="rounded-lg border border-white/10 bg-white/[.045] p-3">
+                  <span className="text-[.65rem] font-semibold tracking-[.12em] text-sky-400">0{index + 1}</span>
+                  <span className="mt-1 block text-sm font-medium text-slate-100">{stage}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <div className="rounded-xl border border-white/10 bg-[#0a1d30] p-5">
+            <p className="text-xs text-slate-400">Operating principle</p>
+            <div className="mt-4 flex items-center gap-3"><span className="size-2.5 shrink-0 rounded-full bg-emerald-400" aria-hidden="true" /><span className="text-sm font-medium">Designed to scale</span></div>
+            <p className="mt-4 text-xs leading-5 text-slate-400">Clear decisions, a supported launch, and steady improvement after delivery.</p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
