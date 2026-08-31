@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="540" viewBox="0 0 800 540" role="img" aria-labelledby="title desc">
+  <title id="title">Driftline Tech stacked logo — white</title>
+  <desc id="desc">The stacked Driftline Tech logo in solid white for use on dark backgrounds.</desc>
+  <g id="stacked-white" fill="#FFFFFF">
+    <g id="icon" transform="translate(205 10)"><path d="M118 0H250C275 0 293 9 311 29L356 79C377 103 373 132 350 151L301 185C317 160 316 140 299 120L253 67C243 55 232 49 215 49H145Z"/><path d="M211 64H269C283 64 293 69 303 81L330 113C353 140 353 170 329 195L247 253C235 261 220 265 204 265H137L263 154C269 149 269 143 264 137Z"/><path d="M18 265L136 166C145 159 155 156 167 156H239L105 265Z"/></g>
+    <g id="driftline-wordmark" transform="translate(65 344) scale(.74)" fill-rule="evenodd"><path d="M0 0H64C100 0 120 18 120 50S100 100 64 100H0ZM28 24V76H60C80 76 91 67 91 50S80 24 60 24Z"/><path transform="translate(134)" d="M0 0H62C92 0 108 15 108 42C108 60 99 72 84 78L110 100H75L52 81H28V100H0ZM28 23V58H59C73 58 80 52 80 41S73 23 59 23Z"/><path transform="translate(258)" d="M0 0H28V100H0Z"/><path transform="translate(300)" d="M0 0H100V24H28V43H88V66H28V100H0Z"/><path transform="translate(414)" d="M0 0H100V25H64V100H36V25H0Z"/><path transform="translate(528)" d="M0 0H28V75H92V100H0Z"/><path transform="translate(634)" d="M0 0H28V100H0Z"/><path transform="translate(676)" d="M0 0H27L87 65V0H115V100H88L28 35V100H0Z"/><path transform="translate(805)" d="M0 0H98V24H28V40H88V63H28V76H98V100H0Z"/></g>
+    <rect x="100" y="468" width="118" height="5" rx="2.5"/><rect x="582" y="468" width="118" height="5" rx="2.5"/>
+    <g id="tech-wordmark" transform="translate(250 452) scale(.7)"><path d="M0 0H50V7H29V44H21V7H0Z"/><path transform="translate(121)" d="M0 0H46V7H8V19H38V26H8V37H46V44H0Z"/><path transform="translate(243)" d="M48 6C42 2 35 0 27 0C11 0 0 9 0 22S11 44 27 44C35 44 42 42 48 38L44 31C39 35 34 37 27 37C16 37 8 31 8 22S16 7 27 7C34 7 39 9 44 13Z"/><path transform="translate(376)" d="M0 0H8V18H45V0H53V44H45V26H8V44H0Z"/></g>
+  </g>
+</svg>
