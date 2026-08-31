@@ -65,7 +65,7 @@ export default function Home() {
 
       <section data-surface="dark" className="hero-grid relative border-b border-white/10">
         <div className="hero-glow" aria-hidden="true" />
-        <div className="page-shell relative grid min-h-[690px] items-center gap-14 py-20 lg:grid-cols-[1.02fr_.98fr] lg:pb-10 lg:pt-20">
+        <div className="page-shell relative grid min-h-[650px] items-center gap-10 py-20 lg:grid-cols-[.98fr_1.02fr] lg:pb-8 lg:pt-20">
           <div className="max-w-3xl">
             <div className="eyebrow mb-7"><Sparkles className="size-4" aria-hidden="true" /> Websites, applications, and connected systems</div>
             <h1 className="text-balance text-5xl font-semibold leading-[1.02] tracking-[-0.055em] sm:text-6xl xl:text-[4.75rem]">
@@ -90,7 +90,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="hero-device-stage relative mx-auto flex w-full items-end justify-center lg:-mr-[clamp(1rem,4vw,4.5rem)] lg:min-h-[500px] lg:self-end">
+          <div className="hero-device-stage relative mx-auto flex min-w-0 w-full items-end justify-center lg:min-h-[500px] lg:self-end lg:justify-end">
             <Image
               src="/brand/Driftline-Tech-Hero-Devices-v2.png"
               alt="Laptop and smartphone displaying Driftline Tech digital solutions."
@@ -99,7 +99,7 @@ export default function Home() {
               loading="eager"
               fetchPriority="high"
               sizes="(max-width: 1023px) calc(100vw - 2rem), (max-width: 1439px) 56vw, 940px"
-              className="relative z-10 h-auto w-full max-w-[820px] object-contain lg:w-[118%] lg:max-w-none xl:w-[125%]"
+              className="relative z-10 h-auto w-full shrink-0 max-w-[820px] object-contain lg:-translate-y-6 lg:w-[clamp(620px,58vw,720px)] lg:max-w-none xl:-translate-y-8 xl:w-[clamp(840px,55vw,1080px)]"
             />
           </div>
         </div>
