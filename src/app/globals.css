@@ -134,7 +134,29 @@
       linear-gradient(180deg, rgb(6 17 30 / 5%), #06111e 96%);
   }
 
-  .product-surface {
+  .hero-device-stage::before {
+    content: "";
+    position: absolute;
+    inset: 12% 4% 4%;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, rgb(0 132 255 / 26%), rgb(0 110 253 / 8%) 45%, transparent 72%);
+    filter: blur(18px);
+  }
+
+  .hero-device-stage::after {
+    content: "";
+    position: absolute;
+    inset: 8% 2% 6%;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgb(74 161 227 / 8%) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(74 161 227 / 8%) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: radial-gradient(ellipse at center, black 10%, transparent 72%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 10%, transparent 72%);
+  }
+
+  .delivery-surface {
     position: relative;
     overflow: hidden;
     border: 1px solid rgb(255 255 255 / 14%);
@@ -144,7 +166,7 @@
     backdrop-filter: blur(18px);
   }
 
-  .product-surface::before {
+  .delivery-surface::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -204,4 +226,3 @@
     line-height: 1.5rem;
   }
 }
-

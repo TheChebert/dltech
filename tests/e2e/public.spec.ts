@@ -7,6 +7,12 @@ test("homepage presents services without unreleased products or named projects",
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Custom solutions");
   await expect(page.getByRole("link", { name: "Explore services" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Discuss a project" })).toBeVisible();
+  const heroDevice = page.getByRole("img", { name: "Laptop and smartphone displaying Driftline Tech digital solutions." });
+  await expect(heroDevice).toHaveAttribute("src", /Driftline-Tech-Hero-Devices-v2\.png/);
+  await expect(heroDevice).toHaveAttribute("width", "1827");
+  await expect(heroDevice).toHaveAttribute("height", "861");
+  await expect(heroDevice).toHaveAttribute("loading", "eager");
+  await expect(heroDevice).toHaveAttribute("fetchpriority", "high");
   await expect(page.getByRole("link", { name: "Driftline Tech home" }).locator("img")).toHaveAttribute(
     "src",
     /Driftline-Tech-Compact-Horizontal-White-and-Blue\.svg/,
@@ -22,7 +28,14 @@ test("homepage presents services without unreleased products or named projects",
   const surfacePattern = await page.locator("main > section[data-surface]").evaluateAll((sections) =>
     sections.map((section) => section.getAttribute("data-surface")),
   );
-  expect(surfacePattern).toEqual(["dark", "dark", "light", "dark", "light"]);
+  expect(surfacePattern).toEqual(["dark", "dark", "dark", "light", "dark", "light"]);
+  const deliverySection = page.locator("#how-we-deliver");
+  await expect(deliverySection.getByRole("heading", { name: "Built around your business." })).toBeVisible();
+  const deliveryStages = deliverySection.getByRole("list", { name: "Delivery stages" });
+  for (const stage of ["Discover", "Build", "Launch", "Improve"]) {
+    await expect(deliveryStages).toContainText(stage);
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(1);
   await expect(page.getByRole("heading", { name: "You do not need a finished specification to begin." })).toBeVisible();
 });
 
