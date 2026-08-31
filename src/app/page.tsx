@@ -20,31 +20,37 @@ import { cn } from "@/lib/utils";
 
 const services = [
   {
+    href: "/services/web-design-development",
     icon: MonitorSmartphone,
     title: "Web design & development",
     description: "Fast, accessible websites shaped around your brand and business goals.",
   },
   {
+    href: "/services/custom-software",
     icon: Code2,
     title: "Custom applications",
     description: "Secure, scalable tools built around the way your team actually works.",
   },
   {
+    href: "/services/automation-integrations",
     icon: Workflow,
     title: "Automation & integrations",
     description: "Connected systems and thoughtful workflows that remove repetitive work.",
   },
   {
+    href: "/services/ai-solutions",
     icon: Bot,
     title: "AI solutions",
     description: "Practical AI experiences designed for real operations and measurable value.",
   },
   {
+    href: "/services/support-maintenance",
     icon: Headphones,
     title: "Support & maintenance",
     description: "Dependable improvement, monitoring, and care after launch.",
   },
   {
+    href: "/services/technology-consulting",
     icon: Braces,
     title: "Technology consulting",
     description: "Clear technical direction for complex product and platform decisions.",
@@ -56,7 +62,7 @@ export default function Home() {
     <main className="overflow-hidden bg-[#06111e] text-white">
       <SiteHeader />
 
-      <section className="hero-grid relative border-b border-white/10">
+      <section data-surface="dark" className="hero-grid relative border-b border-white/10">
         <div className="hero-glow" aria-hidden="true" />
         <div className="page-shell relative grid min-h-[690px] items-center gap-14 py-20 lg:grid-cols-[1.02fr_.98fr] lg:py-24">
           <div className="max-w-3xl">
@@ -109,21 +115,21 @@ export default function Home() {
                           {index === 0 ? <Workflow className="size-4" /> : index === 1 ? <Braces className="size-4" /> : <Layers3 className="size-4" />}
                         </span>
                         <span className="min-w-0 flex-1 text-sm font-medium text-slate-100">{capability}</span>
-                        <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,.65)]" aria-label="Available" />
+                        <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,.65)]" aria-hidden="true" />
                       </div>
                     ))}
                   </div>
                 </div>
                 <div className="grid gap-4">
                   <div className="rounded-xl border border-sky-400/20 bg-gradient-to-br from-blue-600/20 to-sky-400/5 p-5">
-                    <p className="text-xs text-slate-400">Core capabilities</p>
-                    <p className="mt-3 text-3xl font-semibold">06</p>
-                    <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-white/10"><div className="h-full w-4/5 rounded-full bg-gradient-to-r from-blue-500 to-cyan-300" /></div>
-                    <p className="mt-3 text-xs text-slate-400">Web, apps, automation, AI, support, consulting</p>
+                    <p className="text-xs text-slate-400">Connected delivery</p>
+                    <p className="mt-3 text-2xl font-semibold">One clear plan</p>
+                    <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-white/10" aria-hidden="true"><div className="h-full w-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-300" /></div>
+                    <p className="mt-3 text-xs leading-5 text-slate-400">Strategy, experience, engineering, integration, and support stay aligned.</p>
                   </div>
                   <div className="rounded-xl border border-white/10 bg-[#0a1d30] p-5">
-                    <p className="text-xs text-slate-400">Delivery approach</p>
-                    <div className="mt-4 flex items-center gap-3"><span className="size-2.5 rounded-full bg-emerald-400" /><span className="text-sm font-medium">Designed to scale</span></div>
+                    <p className="text-xs text-slate-400">Operating principle</p>
+                    <div className="mt-4 flex items-center gap-3"><span className="size-2.5 rounded-full bg-emerald-400" aria-hidden="true" /><span className="text-sm font-medium">Built to be owned</span></div>
                     <div className="mt-6 flex h-16 items-end gap-1.5" aria-hidden="true">
                       {[36, 52, 44, 68, 58, 82, 72, 94, 84, 100].map((height, index) => <span key={index} className="flex-1 rounded-t-sm bg-gradient-to-t from-blue-600/60 to-cyan-300/90" style={{ height: height + "%" }} />)}
                     </div>
@@ -135,20 +141,20 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative bg-[#081827] py-20 sm:py-24">
+      <section data-surface="dark" className="relative bg-[#081827] py-20 sm:py-24">
         <div className="page-shell">
           <div className="mx-auto max-w-3xl text-center">
             <p className="section-kicker">What we do</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Technology that moves your business forward</h2>
-            <p className="mt-4 text-base leading-7 text-slate-400">One partner for thoughtful strategy, polished experiences, and dependable software.</p>
+            <p className="mt-4 text-base leading-7 text-slate-400">Bring the website, workflow, data, and long-term support into one coordinated plan.</p>
           </div>
           <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-            {services.map(({ icon: Icon, title, description }) => (
+            {services.map(({ href, icon: Icon, title, description }) => (
               <article key={title} className="group flex min-h-[270px] flex-col bg-[#081827] p-6 transition-colors hover:bg-[#0b2034]">
                 <Icon className="size-7 text-blue-400 transition-transform group-hover:-translate-y-0.5" strokeWidth={1.8} aria-hidden="true" />
                 <h3 className="mt-7 text-lg font-semibold leading-6">{title}</h3>
                 <p className="mt-3 text-sm leading-6 text-slate-400">{description}</p>
-                <Link href="/services" className="mt-auto inline-flex items-center gap-2 pt-5 text-sm font-medium text-sky-400 hover:text-sky-300">
+                <Link href={href} className="mt-auto inline-flex items-center gap-2 pt-5 text-sm font-medium text-sky-400 hover:text-sky-300">
                   Learn more <ArrowRight className="size-4" aria-hidden="true" />
                 </Link>
               </article>
@@ -157,42 +163,62 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-[#06111e] py-20 sm:py-24">
+      <section data-surface="light" className="bg-[#f6f9fd] py-20 text-slate-950 sm:py-24">
         <div className="page-shell">
           <div className="max-w-3xl">
             <p className="section-kicker">How we work</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">Designed as a connected system, not a stack of isolated deliverables.</h2>
-            <p className="mt-4 text-base leading-7 text-slate-400">Every engagement starts with the business outcome, then connects the experience, data, workflows, security, and long-term ownership needed to support it.</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">A clear path from business problem to dependable system.</h2>
+            <p className="mt-4 text-base leading-7 text-slate-600">Every engagement starts with the outcome, then connects the customer experience, data, workflows, security, and long-term ownership needed to support it.</p>
           </div>
-          <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 md:grid-cols-3">
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
             {[
               ["01", "Understand the work", "Clarify the people, process, constraints, and measurable outcome before choosing the technology."],
               ["02", "Design the system", "Shape the interface, architecture, integrations, and operating model as one coherent solution."],
-              ["03", "Launch with ownership", "Deliver documentation, observability, support, and a practical path for the next change."],
+              ["03", "Launch with ownership", "Deliver documentation, operational visibility, support, and a practical path for the next change."],
             ].map(([step, title, description]) => (
-              <article key={step} className="bg-[#0a1d30] p-7 sm:p-8">
-                <span className="text-xs font-semibold uppercase tracking-[.16em] text-sky-400">Step {step}</span>
-                <h3 className="mt-8 text-xl font-semibold">{title}</h3>
-                <p className="mt-3 text-sm leading-6 text-slate-400">{description}</p>
+              <article key={step} className="rounded-2xl border border-slate-200 bg-white p-7 shadow-[0_16px_45px_rgba(11,22,38,.06)] sm:p-8">
+                <span className="text-xs font-semibold uppercase tracking-[.16em] text-blue-600">Step {step}</span>
+                <h3 className="mt-8 text-xl font-semibold text-slate-950">{title}</h3>
+                <p className="mt-3 text-sm leading-6 text-slate-600">{description}</p>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-white py-16 text-slate-950">
-        <div className="page-shell grid gap-px overflow-hidden rounded-2xl border border-slate-200 bg-slate-200 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            ["Secure by design", "Authorization, validation, and least privilege are part of the architecture."],
-            ["Built for change", "Systems and content can evolve without rebuilding the whole platform."],
-            ["Clear ownership", "Documentation and observable systems make future work easier to operate."],
-            ["Measured complexity", "Use proven services where they help, and custom code where it matters."],
-          ].map(([title, description]) => (
-            <div key={title} className="bg-white p-7">
-              <h2 className="font-semibold text-slate-950">{title}</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
-            </div>
-          ))}
+      <section data-surface="dark" className="bg-[#06111e] py-20 text-white sm:py-24">
+        <div className="page-shell">
+          <div className="max-w-3xl">
+            <p className="section-kicker">Why businesses choose Driftline</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">Technology decisions should make the business easier to run.</h2>
+            <p className="mt-4 text-base leading-7 text-slate-400">The work is shaped to reduce uncertainty now and leave your team with a system it can understand, operate, and improve.</p>
+          </div>
+          <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-2">
+            {[
+              ["One accountable partner", "Customer experience, data, integrations, security, and launch planning stay connected from discovery through support."],
+              ["Decisions tied to outcomes", "Every recommendation should answer a customer need, an operating constraint, or a measurable business goal."],
+              ["Ready for real operations", "Testing, visibility, documentation, recovery paths, and access controls are considered before handoff."],
+              ["Built for the next change", "Modular systems and clear ownership make the next improvement easier without starting over."],
+            ].map(([title, description]) => (
+              <article key={title} className="bg-[#0a1d30] p-7 sm:p-8">
+                <h3 className="text-lg font-semibold text-white">{title}</h3>
+                <p className="mt-3 max-w-xl text-sm leading-6 text-slate-400">{description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section data-surface="light" className="bg-white py-20 text-slate-950 sm:py-24">
+        <div className="page-shell grid items-center gap-10 lg:grid-cols-[1fr_auto]">
+          <div className="max-w-3xl">
+            <p className="section-kicker">Start with the problem</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">You do not need a finished specification to begin.</h2>
+            <p className="mt-4 text-base leading-7 text-slate-600">Tell us what is not working, who it affects, and what a better outcome would change. We will help turn that context into a practical next step.</p>
+          </div>
+          <Link href="/contact" className={cn(buttonVariants({ size: "lg" }), "h-12 rounded-lg bg-blue-600 px-6 text-base text-white hover:bg-blue-500")}>
+            Tell us what you need <ArrowRight aria-hidden="true" />
+          </Link>
         </div>
       </section>
       <SiteFooter />
