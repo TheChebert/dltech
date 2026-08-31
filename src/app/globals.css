@@ -226,3 +226,9 @@
     line-height: 1.5rem;
   }
 }
+
+@media (min-width: 80rem) {
+  .hero-device-stage {
+    transform: translateX(min(10vw, max(0px, calc((100vw - 90rem) / 2 - .75rem))));
+  }
+}
