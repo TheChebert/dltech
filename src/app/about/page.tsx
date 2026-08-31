@@ -22,9 +22,9 @@ export default function AboutPage() {
             <h2 className="mt-3 text-3xl font-semibold tracking-[-.035em] text-slate-950">The interface matters. So do the permissions, data, releases, support, and recovery behind it.</h2>
           </div>
           <div className="space-y-5 text-base leading-8 text-slate-600">
-            <p>We approach websites as business systems, custom applications as operated products, and automation as software that needs ownership and failure handling.</p>
+            <p>We approach websites as business systems, custom applications as long-lived tools, and automation as software that needs clear ownership and dependable failure handling.</p>
             <p>That means making design quality, security, performance, maintainability, documentation, and deployment reliability part of the same conversation.</p>
-            <p>Where project details are still evolving, we say so plainly. Credibility is built by being specific about what exists, what was tested, and what remains to be decided.</p>
+            <p>You get a clear view of what is proven, what is assumed, and which decision comes next. That protects trust, keeps priorities visible, and prevents avoidable rework.</p>
           </div>
         </div>
       </section>
@@ -33,7 +33,7 @@ export default function AboutPage() {
           {[
             [Eye, "Clarity", "Make the problem, tradeoffs, state, and next decision visible."],
             [Scale, "Proportion", "Use enough architecture for the risk without making the solution heavier than it needs to be."],
-            [ShieldCheck, "Responsibility", "Treat security, accessibility, privacy, and recovery as product requirements."],
+            [ShieldCheck, "Responsibility", "Treat security, accessibility, privacy, and recovery as delivery requirements."],
             [Layers3, "Continuity", "Design work so another capable person can understand, operate, and extend it."],
           ].map(([Icon, title, description]) => {
             const IconComponent = Icon as typeof Eye;
