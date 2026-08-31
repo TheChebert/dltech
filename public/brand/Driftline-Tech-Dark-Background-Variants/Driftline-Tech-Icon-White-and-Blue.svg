@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="280" viewBox="0 0 400 280" role="img" aria-labelledby="title desc">
+  <title id="title">Driftline Tech standalone icon — white and blue</title>
+  <desc id="desc">The standalone three-piece Driftline Tech icon with a white upper chevron and blue-to-cyan lower chevrons for dark backgrounds.</desc>
+  <defs>
+    <linearGradient id="center" x1="0" y1="0" x2="0.88" y2="1"><stop offset="0" stop-color="#006EFD"/><stop offset="1" stop-color="#00C2FF"/></linearGradient>
+    <linearGradient id="lower" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#006EFD"/><stop offset="0.72" stop-color="#006EFD"/><stop offset="1" stop-color="#00C2FF"/></linearGradient>
+  </defs>
+  <g id="standalone-icon-white-and-blue" transform="translate(12 8)"><path fill="#FFFFFF" d="M118 0H250C275 0 293 9 311 29L356 79C377 103 373 132 350 151L301 185C317 160 316 140 299 120L253 67C243 55 232 49 215 49H145Z"/><path fill="url(#center)" d="M211 64H269C283 64 293 69 303 81L330 113C353 140 353 170 329 195L247 253C235 261 220 265 204 265H137L263 154C269 149 269 143 264 137Z"/><path fill="url(#lower)" d="M18 265L136 166C145 159 155 156 167 156H239L105 265Z"/></g>
+</svg>

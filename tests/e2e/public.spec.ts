@@ -9,7 +9,11 @@ test("homepage presents services without unreleased products or named projects",
   await expect(page.getByRole("link", { name: "Discuss a project" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Driftline Tech home" }).locator("img")).toHaveAttribute(
     "src",
-    /Driftline-Tech-Reversed-Dark\.svg/,
+    /Driftline-Tech-Compact-Horizontal-White-and-Blue\.svg/,
+  );
+  await expect(page.locator("footer").getByRole("img", { name: "Driftline Tech" })).toHaveAttribute(
+    "src",
+    /Driftline-Tech-Primary-Logo-White-and-Blue\.svg/,
   );
   await expect(page.locator("body")).not.toContainText(unreleasedNames);
   await expect(page.getByRole("navigation", { name: "Primary navigation" }).getByRole("link", { name: "Software" })).toHaveCount(0);
@@ -36,6 +40,13 @@ test("sitemap excludes hidden software, portfolio, and licensing routes", async 
   expect(sitemap).not.toContain("/software");
   expect(sitemap).not.toContain("/work");
   expect(sitemap).not.toContain("/legal/software-license");
+});
+
+test("manifest uses the official dark app icon", async ({ request }) => {
+  const response = await request.get("/manifest.webmanifest");
+  expect(response.ok()).toBe(true);
+  const manifest = await response.json();
+  expect(manifest.icons).toContainEqual(expect.objectContaining({ src: "/brand/Driftline-Tech-App-Icon-Dark.svg" }));
 });
 
 test("protected customer route redirects to sign in", async ({ page }) => {
