@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Code2, Mail, Network } from "lucide-react";
+import { Mail } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand-logo";
 
@@ -26,7 +26,7 @@ const footerLinks = [
     title: "Resources",
     links: [
       ["Support", "/support"],
-      ["System API", "/api/v1/health"],
+      ["Start a project", "/contact?topic=project"],
     ],
   },
   {
@@ -50,14 +50,6 @@ export function SiteFooter() {
           <a href="mailto:hello@driftlinetech.com" className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-sky-400 hover:text-sky-300">
             <Mail className="size-4" aria-hidden="true" /> hello@driftlinetech.com
           </a>
-          <div className="mt-6 flex gap-3">
-            <a href="https://github.com/TheChebert" target="_blank" rel="noreferrer" aria-label="Driftline Tech on GitHub" className="flex size-9 items-center justify-center rounded-lg border border-white/10 text-slate-400 hover:border-sky-400/40 hover:text-sky-300">
-              <Code2 className="size-4" aria-hidden="true" />
-            </a>
-            <span aria-label="LinkedIn profile coming soon" className="flex size-9 items-center justify-center rounded-lg border border-white/10 text-slate-600">
-              <Network className="size-4" aria-hidden="true" />
-            </span>
-          </div>
         </div>
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
           {footerLinks.map((group) => (
@@ -76,7 +68,7 @@ export function SiteFooter() {
       </div>
       <div className="page-shell flex flex-col gap-2 border-t border-white/10 py-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
         <p>© {new Date().getFullYear()} Driftline Tech, LLC. All rights reserved.</p>
-        <p>Service scope and availability are confirmed during discovery.</p>
+        <p>Websites, applications, and connected systems built with clarity and care.</p>
       </div>
     </footer>
   );
