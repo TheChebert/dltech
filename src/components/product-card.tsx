@@ -14,7 +14,7 @@ export function ProductCard({ product }: { product: Product }) {
   const Icon = product.accent === "emerald" ? ListChecks : product.accent === "violet" ? FileText : Images;
 
   return (
-    <article className="group flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_18px_55px_rgba(9,30,66,.08)] transition hover:-translate-y-1 hover:shadow-[0_24px_70px_rgba(9,30,66,.13)]">
+    <article className="surface-panel group flex h-full flex-col rounded-2xl border border-slate-300/80 p-6 shadow-[0_18px_55px_rgba(9,30,66,.08)] transition hover:-translate-y-1 hover:shadow-[0_24px_70px_rgba(9,30,66,.13)]">
       <div className="flex items-start justify-between gap-4">
         <span className={cn("flex size-12 items-center justify-center rounded-xl shadow-lg", accentStyles[product.accent])}>
           <Icon className="size-5" aria-hidden="true" />

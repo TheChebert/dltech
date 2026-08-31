@@ -15,7 +15,7 @@ export default function AboutPage() {
   return (
     <MarketingShell>
       <InnerHero eyebrow="About Driftline" title="A technology company built around useful systems and clear ownership." description="Driftline Tech helps businesses design, build, connect, and support digital systems. The work stays grounded in what it takes to operate and improve technology after launch." />
-      <section className="bg-white py-20 sm:py-24">
+      <section className="surface-light py-20 sm:py-24">
         <div className="page-shell grid gap-12 lg:grid-cols-2">
           <div>
             <p className="section-kicker">Our point of view</p>
@@ -28,7 +28,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-      <section className="bg-[#f6f9fd] py-20">
+      <section className="surface-light-alt py-20">
         <div className="page-shell grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {[
             [Eye, "Clarity", "Make the problem, tradeoffs, state, and next decision visible."],
@@ -37,7 +37,7 @@ export default function AboutPage() {
             [Layers3, "Continuity", "Design work so another capable person can understand, operate, and extend it."],
           ].map(([Icon, title, description]) => {
             const IconComponent = Icon as typeof Eye;
-            return <div key={title as string} className="rounded-2xl border border-slate-200 bg-white p-6"><IconComponent className="size-6 text-blue-600" /><h2 className="mt-6 text-lg font-semibold text-slate-950">{title as string}</h2><p className="mt-2 text-sm leading-6 text-slate-600">{description as string}</p></div>;
+            return <div key={title as string} className="surface-panel rounded-2xl border border-slate-300/80 p-6"><IconComponent className="size-6 text-blue-600" /><h2 className="mt-6 text-lg font-semibold text-slate-950">{title as string}</h2><p className="mt-2 text-sm leading-6 text-slate-600">{description as string}</p></div>;
           })}
         </div>
       </section>
