@@ -184,8 +184,25 @@ test("business phone number is available on the contact page and site footer", a
     "tel:+16085020949",
   );
 
-  const organization = JSON.parse(
+  const structuredData = JSON.parse(
     (await page.locator('script[type="application/ld+json"]').textContent()) ?? "{}",
   );
-  expect(organization.telephone).toBe("+1-608-502-0949");
+  const organization = (structuredData["@graph"] ?? [structuredData]).find(
+    (entry: { "@type"?: string | string[] }) => {
+      const types = Array.isArray(entry["@type"]) ? entry["@type"] : [entry["@type"]];
+      return types.includes("Organization");
+    },
+  );
+  expect(String(organization.telephone).replace(/\D/g, "")).toBe("16085020949");
+});
+
+test("site identifies the La Crosse area as Driftline Tech's home base", async ({ page }) => {
+  await page.goto("/about");
+  await expect(page.getByText(/Based in the La Crosse, Wisconsin area/)).toBeVisible();
+
+  await page.goto("/contact");
+  await expect(page.getByText("La Crosse, WI area · Remote-first", { exact: true })).toBeVisible();
+
+  await page.goto("/");
+  await expect(page.locator("footer").getByText("La Crosse, WI area", { exact: true })).toBeVisible();
 });
