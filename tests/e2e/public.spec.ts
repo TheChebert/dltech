@@ -146,3 +146,27 @@ test("hero composition stays prominent and contained across viewports", async ({
   if (headerLogoBox) expect(headerLogoBox.width).toBeGreaterThanOrEqual(isMobile ? 195 : 225);
   expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(1);
 });
+test("contact form respects topic links and confirms a successful submission", async ({ page }) => {
+  await page.route("**/api/contact", async (route) => {
+    await route.fulfill({
+      status: 201,
+      contentType: "application/json",
+      body: JSON.stringify({
+        message: "Thank you. Driftline Tech will review your message and reply by email.",
+      }),
+    });
+  });
+
+  await page.goto("/contact?topic=support");
+  await expect(page.getByLabel("What can we help with?")).toHaveValue("support");
+
+  await page.getByLabel("Name").fill("Ada Lovelace");
+  await page.getByLabel("Work email").fill("ada@example.com");
+  await page
+    .getByLabel("How can we help?")
+    .fill("We need help improving a dependable customer-facing system.");
+  await page.getByLabel(/I agree that Driftline Tech/).check();
+  await page.getByRole("button", { name: "Send message" }).click();
+
+  await expect(page.getByRole("heading", { name: "Message received" })).toBeVisible();
+});

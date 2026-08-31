@@ -11,7 +11,12 @@ export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
 };
 
-export default function ContactPage() {
+export default async function ContactPage({ searchParams }: PageProps<"/contact">) {
+  const topicParam = (await searchParams).topic;
+  const defaultTopic =
+    topicParam === "support" || topicParam === "consulting" || topicParam === "other"
+      ? topicParam
+      : "project";
   return (
     <MarketingShell>
       <InnerHero eyebrow="Contact" title="Tell us what needs to work better." description="Share the problem, the business context, and the outcome you are aiming for. If it is a fit for Driftline, we will continue the conversation with a practical next step." />
@@ -27,7 +32,7 @@ export default function ContactPage() {
               <div className="flex items-center gap-4 surface-panel rounded-xl border border-slate-300/80 p-4 text-sm font-medium text-slate-800"><ShieldCheck className="size-5 text-blue-600" />Please do not send passwords, keys, or sensitive customer data</div>
             </div>
           </div>
-          <ContactForm />
+          <ContactForm defaultTopic={defaultTopic} />
         </div>
       </section>
     </MarketingShell>

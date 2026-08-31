@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { allowRequest, getClientIp, sha256Hex } from "@/lib/api/security";
+import { sendContactNotification } from "@/lib/contact-notification";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const contactSchema = z.object({
@@ -48,23 +49,44 @@ export async function POST(request: Request) {
   const userAgent = request.headers.get("user-agent")?.slice(0, 500) ?? null;
   const supabase = createAdminClient();
 
-  const { error } = await supabase.from("contact_submissions").insert({
-    name: parsed.data.name,
-    email: parsed.data.email,
-    company: parsed.data.company || null,
-    topic: parsed.data.topic,
-    message: parsed.data.message,
-    source_ip: forwarded,
-    user_agent: userAgent,
-    consented_at: new Date().toISOString(),
-  });
+  const { data: submission, error } = await supabase
+    .from("contact_submissions")
+    .insert({
+      name: parsed.data.name,
+      email: parsed.data.email,
+      company: parsed.data.company || null,
+      topic: parsed.data.topic,
+      message: parsed.data.message,
+      source_ip: forwarded,
+      user_agent: userAgent,
+      consented_at: new Date().toISOString(),
+    })
+    .select("id")
+    .single();
 
-  if (error) {
-    console.error("contact_submission_failed", { code: error.code });
+  if (error || !submission) {
+    console.error("contact_submission_failed", { code: error?.code ?? "missing_submission" });
     return NextResponse.json(
       { message: "Your message could not be saved. Please email hello@driftlinetech.com." },
       { status: 503 },
     );
+  }
+
+  const notification = await sendContactNotification({
+    submissionId: submission.id,
+    name: parsed.data.name,
+    email: parsed.data.email,
+    company: parsed.data.company,
+    topic: parsed.data.topic,
+    message: parsed.data.message,
+  });
+
+  if (!notification.ok) {
+    console.error("contact_notification_failed", {
+      submissionId: submission.id,
+      reason: notification.reason,
+      status: notification.status,
+    });
   }
 
   return NextResponse.json(
