@@ -4,8 +4,9 @@ import { FormEvent, useState } from "react";
 import { CheckCircle2, Loader2 } from "lucide-react";
 
 type FormStatus = { type: "idle" | "submitting" | "success" | "error"; message?: string };
+type ContactTopic = "project" | "support" | "consulting" | "other";
 
-export function ContactForm() {
+export function ContactForm({ defaultTopic = "project" }: { defaultTopic?: ContactTopic }) {
   const [status, setStatus] = useState<FormStatus>({ type: "idle" });
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -42,7 +43,7 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={submit} className="surface-panel space-y-5 rounded-2xl border border-slate-300/80 p-6 shadow-[0_20px_65px_rgba(11,22,38,.08)] sm:p-8" noValidate>
+    <form onSubmit={submit} className="surface-panel space-y-5 rounded-2xl border border-slate-300/80 p-6 shadow-[0_20px_65px_rgba(11,22,38,.08)] sm:p-8">
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Name" name="name" autoComplete="name" required maxLength={120} />
         <Field label="Work email" name="email" type="email" autoComplete="email" required maxLength={254} />
@@ -51,7 +52,7 @@ export function ContactForm() {
         <Field label="Company (optional)" name="company" autoComplete="organization" maxLength={160} />
         <label className="grid gap-2 text-sm font-medium text-slate-800">
           What can we help with?
-          <select name="topic" defaultValue="project" className="h-12 rounded-lg border border-slate-300 bg-[#edf2f7] px-3 text-base text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-3 focus:ring-blue-100">
+          <select name="topic" defaultValue={defaultTopic} className="h-12 rounded-lg border border-slate-300 bg-[#edf2f7] px-3 text-base text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-3 focus:ring-blue-100">
             <option value="project">New project</option>
             <option value="support">Support request</option>
             <option value="consulting">Technology consulting</option>
