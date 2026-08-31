@@ -170,3 +170,22 @@ test("contact form respects topic links and confirms a successful submission", a
 
   await expect(page.getByRole("heading", { name: "Message received" })).toBeVisible();
 });
+
+test("business phone number is available on the contact page and site footer", async ({ page }) => {
+  await page.goto("/contact");
+  await expect(page.getByRole("link", { name: "608-502-0949" }).first()).toHaveAttribute(
+    "href",
+    "tel:+16085020949",
+  );
+
+  await page.goto("/");
+  await expect(page.locator("footer").getByRole("link", { name: "608-502-0949" })).toHaveAttribute(
+    "href",
+    "tel:+16085020949",
+  );
+
+  const organization = JSON.parse(
+    (await page.locator('script[type="application/ld+json"]').textContent()) ?? "{}",
+  );
+  expect(organization.telephone).toBe("+1-608-502-0949");
+});
