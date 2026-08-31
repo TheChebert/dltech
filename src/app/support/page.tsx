@@ -15,7 +15,7 @@ export default function SupportPage() {
   return (
     <MarketingShell>
       <InnerHero eyebrow="Support" title="Find the right path for project or service help." description="For active engagements and systems supported by Driftline, share what is happening and we will help route the request to the right next step." />
-      <section className="bg-[#f6f9fd] py-20">
+      <section className="surface-light py-20">
         <div className="page-shell grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {[
             [BookOpen, "Project documentation", "Questions about plans, handoff guidance, decisions, or materials from an active engagement.", "/contact?topic=support", "Request project help"],
@@ -26,7 +26,7 @@ export default function SupportPage() {
           ].map(([Icon, title, description, href, action]) => {
             const IconComponent = Icon as typeof BookOpen;
             return (
-              <article key={title as string} className="flex min-h-[280px] flex-col rounded-2xl border border-slate-200 bg-white p-7">
+              <article key={title as string} className="surface-panel flex min-h-[280px] flex-col rounded-2xl border border-slate-300/80 p-7">
                 <IconComponent className="size-7 text-blue-600" aria-hidden="true" />
                 <h2 className="mt-7 text-xl font-semibold text-slate-950">{title as string}</h2>
                 <p className="mt-3 text-sm leading-6 text-slate-600">{description as string}</p>
@@ -36,12 +36,12 @@ export default function SupportPage() {
           })}
         </div>
       </section>
-      <section className="bg-white py-20">
-        <div className="page-shell rounded-2xl border border-slate-200 p-8 sm:p-12">
+      <section className="surface-light-alt py-20">
+        <div className="page-shell surface-panel rounded-2xl border border-slate-300/80 p-8 sm:p-12">
           <p className="section-kicker">Before submitting a support request</p>
           <h2 className="mt-3 text-3xl font-semibold text-slate-950">Include enough context to reproduce the problem.</h2>
           <ul className="mt-8 grid gap-3 text-sm leading-6 text-slate-700 sm:grid-cols-2">
-            {["System, page, or workflow", "Operating system or browser", "What you expected", "What happened instead", "Steps already tried", "Screenshots without private information"].map((item) => <li key={item} className="flex gap-3 rounded-xl bg-slate-50 p-4"><span className="mt-2 size-1.5 rounded-full bg-blue-600" />{item}</li>)}
+            {["System, page, or workflow", "Operating system or browser", "What you expected", "What happened instead", "Steps already tried", "Screenshots without private information"].map((item) => <li key={item} className="flex gap-3 rounded-xl bg-[#e5ecf3] p-4"><span className="mt-2 size-1.5 rounded-full bg-blue-600" />{item}</li>)}
           </ul>
         </div>
       </section>
