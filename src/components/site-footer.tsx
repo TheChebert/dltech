@@ -43,7 +43,7 @@ export function SiteFooter() {
     <footer className="border-t border-white/10 bg-[#05101c] text-white">
       <div className="page-shell grid gap-12 py-16 lg:grid-cols-[1.35fr_2.65fr]">
         <div className="max-w-sm">
-          <BrandLogo onDark className="h-auto w-[210px]" />
+          <BrandLogo onDark variant="primary" className="h-auto w-[230px]" />
           <p className="mt-6 text-sm leading-6 text-slate-400">
             Thoughtful software, websites, automation, and technical systems built for real work.
           </p>
