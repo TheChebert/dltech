@@ -15,7 +15,7 @@ export default function AccountPage() {
   return (
     <MarketingShell>
       <InnerHero eyebrow="Customer account" title="Secure access for invited customers." description="This private area supports customer access without exposing account or engagement information on the public site." />
-      <section className="bg-[#f6f9fd] py-20">
+      <section className="surface-light py-20">
         <div className="page-shell grid gap-10 lg:grid-cols-[.9fr_1.1fr]">
           <div>
             <p className="section-kicker">Protected customer access</p>
@@ -28,7 +28,7 @@ export default function AccountPage() {
                 [ShieldCheck, "Protected access", "Server-verified sessions and row-level database policies."],
               ].map(([Icon, title, description]) => {
                 const IconComponent = Icon as typeof UsersRound;
-                return <div key={title as string} className="rounded-xl border border-slate-200 bg-white p-5"><IconComponent className="size-5 text-blue-600" /><h3 className="mt-4 font-semibold text-slate-950">{title as string}</h3><p className="mt-2 text-sm leading-6 text-slate-600">{description as string}</p></div>;
+                return <div key={title as string} className="surface-panel rounded-xl border border-slate-300/80 p-5"><IconComponent className="size-5 text-blue-600" /><h3 className="mt-4 font-semibold text-slate-950">{title as string}</h3><p className="mt-2 text-sm leading-6 text-slate-600">{description as string}</p></div>;
               })}
             </div>
           </div>

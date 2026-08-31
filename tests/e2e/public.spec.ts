@@ -39,6 +39,24 @@ test("homepage presents services without unreleased products or named projects",
   await expect(page.getByRole("heading", { name: "You do not need a finished specification to begin." })).toBeVisible();
 });
 
+test("homepage uses varied softened surfaces without a decorative hero icon", async ({ page }) => {
+  await page.goto("/");
+
+  const eyebrow = page.locator(".eyebrow");
+  await expect(eyebrow).toHaveText("Websites, applications, and connected systems");
+  await expect(eyebrow.locator("svg")).toHaveCount(0);
+
+  const surfaceColors = await page.locator("main > section[data-surface]").evaluateAll((sections) =>
+    sections.map((section) => getComputedStyle(section).backgroundColor),
+  );
+  expect(surfaceColors[1]).not.toBe(surfaceColors[2]);
+  expect(surfaceColors).not.toContain("rgb(255, 255, 255)");
+
+  for (const index of [3, 5]) {
+    const channels = surfaceColors[index].match(/\d+/g)?.map(Number) ?? [];
+    expect(Math.max(...channels.slice(0, 3))).toBeLessThanOrEqual(244);
+  }
+});
 test("custom software remains a service while legacy product and work routes stay hidden", async ({ page }) => {
   await page.goto("/services/custom-software");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Software that fits");
