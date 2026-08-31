@@ -16,7 +16,7 @@ export function CtaBand({
   description = "Tell us what is changing, what is getting in the way, and what a successful next step would look like.",
 }: CtaBandProps) {
   return (
-    <section className="bg-[#071522] py-20 text-white">
+    <section className="surface-dark-alt py-20 text-white">
       <div className="page-shell grid items-center gap-8 rounded-2xl border border-sky-400/20 bg-gradient-to-br from-blue-600/15 via-[#0a1d30] to-cyan-400/5 p-8 shadow-2xl shadow-slate-950/20 sm:p-12 lg:grid-cols-[1fr_auto]">
         <div className="max-w-3xl">
           <p className="section-kicker">{eyebrow}</p>

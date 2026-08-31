@@ -10,7 +10,6 @@ import {
   Layers3,
   MonitorSmartphone,
   ShieldCheck,
-  Sparkles,
   Workflow,
 } from "lucide-react";
 
@@ -67,7 +66,7 @@ export default function Home() {
         <div className="hero-glow" aria-hidden="true" />
         <div className="page-shell relative grid min-h-[650px] items-center gap-10 py-20 lg:grid-cols-[.98fr_1.02fr] lg:pb-8 lg:pt-20">
           <div className="max-w-3xl">
-            <div className="eyebrow mb-7"><Sparkles className="size-4" aria-hidden="true" /> Websites, applications, and connected systems</div>
+            <div className="eyebrow mb-7">Websites, applications, and connected systems</div>
             <h1 className="text-balance text-5xl font-semibold leading-[1.02] tracking-[-0.055em] sm:text-6xl xl:text-[4.75rem]">
               Custom solutions.
               <span className="mt-1 block text-gradient">Connected technology.</span>
@@ -105,7 +104,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section data-surface="dark" className="relative bg-[#081827] py-20 sm:py-24">
+      <section data-surface="dark" className="surface-dark relative py-20 sm:py-24">
         <div className="page-shell">
           <div className="mx-auto max-w-3xl text-center">
             <p className="section-kicker">What we do</p>
@@ -114,7 +113,7 @@ export default function Home() {
           </div>
           <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
             {services.map(({ href, icon: Icon, title, description }) => (
-              <article key={title} className="group flex min-h-[270px] flex-col bg-[#081827] p-6 transition-colors hover:bg-[#0b2034]">
+              <article key={title} className="group flex min-h-[270px] flex-col bg-[#0a1d30] p-6 transition-colors hover:bg-[#102942]">
                 <Icon className="size-7 text-blue-400 transition-transform group-hover:-translate-y-0.5" strokeWidth={1.8} aria-hidden="true" />
                 <h3 className="mt-7 text-lg font-semibold leading-6">{title}</h3>
                 <p className="mt-3 text-sm leading-6 text-slate-400">{description}</p>
@@ -127,7 +126,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="how-we-deliver" data-surface="dark" className="relative border-t border-white/10 bg-[#081827] py-20 sm:py-24">
+      <section id="how-we-deliver" data-surface="dark" className="surface-dark-alt relative border-t border-white/10 py-20 sm:py-24">
         <div className="page-shell grid items-center gap-12 lg:grid-cols-[.72fr_1.28fr] xl:gap-16">
           <div className="max-w-xl">
             <p className="section-kicker">How we deliver</p>
@@ -140,7 +139,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section data-surface="light" className="bg-[#f6f9fd] py-20 text-slate-950 sm:py-24">
+      <section data-surface="light" className="surface-light py-20 text-slate-950 sm:py-24">
         <div className="page-shell">
           <div className="max-w-3xl">
             <p className="section-kicker">How we work</p>
@@ -153,7 +152,7 @@ export default function Home() {
               ["02", "Design the system", "Shape the interface, architecture, integrations, and operating model as one coherent solution."],
               ["03", "Launch with ownership", "Deliver documentation, operational visibility, support, and a practical path for the next change."],
             ].map(([step, title, description]) => (
-              <article key={step} className="rounded-2xl border border-slate-200 bg-white p-7 shadow-[0_16px_45px_rgba(11,22,38,.06)] sm:p-8">
+              <article key={step} className="surface-panel rounded-2xl border border-slate-300/80 p-7 shadow-[0_16px_45px_rgba(11,22,38,.06)] sm:p-8">
                 <span className="text-xs font-semibold uppercase tracking-[.16em] text-blue-600">Step {step}</span>
                 <h3 className="mt-8 text-xl font-semibold text-slate-950">{title}</h3>
                 <p className="mt-3 text-sm leading-6 text-slate-600">{description}</p>
@@ -163,7 +162,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section data-surface="dark" className="bg-[#06111e] py-20 text-white sm:py-24">
+      <section data-surface="dark" className="surface-dark py-20 text-white sm:py-24">
         <div className="page-shell">
           <div className="max-w-3xl">
             <p className="section-kicker">Why businesses choose Driftline</p>
@@ -186,7 +185,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section data-surface="light" className="bg-white py-20 text-slate-950 sm:py-24">
+      <section data-surface="light" className="surface-light-alt py-20 text-slate-950 sm:py-24">
         <div className="page-shell grid items-center gap-10 lg:grid-cols-[1fr_auto]">
           <div className="max-w-3xl">
             <p className="section-kicker">Start with the problem</p>
