@@ -21,7 +21,7 @@ export function SiteHeader() {
     <header className="relative z-50 border-b border-white/10 bg-[#06111e]/90 backdrop-blur-xl">
       <div className="page-shell flex h-20 items-center justify-between gap-8">
         <Link href="/" aria-label="Driftline Tech home" className="shrink-0">
-          <BrandLogo onDark preload variant="compact" className="h-auto w-[180px] md:w-[205px]" />
+          <BrandLogo onDark preload variant="compact" className="h-auto w-[200px] md:w-[230px]" />
         </Link>
 
         <nav aria-label="Primary navigation" className="hidden items-center gap-8 lg:flex">

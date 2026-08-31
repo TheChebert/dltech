@@ -95,3 +95,36 @@ test("mobile navigation exposes only the current public routes", async ({ page, 
   await expect(navigation.getByRole("link", { name: "Software", exact: true })).toHaveCount(0);
   await expect(navigation.getByRole("link", { name: "Work", exact: true })).toHaveCount(0);
 });
+
+test("hero composition stays prominent and contained across viewports", async ({ page, isMobile }) => {
+  await page.goto("/");
+  const heroDevice = page.getByRole("img", { name: "Laptop and smartphone displaying Driftline Tech digital solutions." });
+  const heroDeviceBox = await heroDevice.boundingBox();
+  const viewport = page.viewportSize();
+  expect(heroDeviceBox).not.toBeNull();
+  expect(viewport).not.toBeNull();
+
+  if (heroDeviceBox && viewport) {
+    if (isMobile) {
+      expect(heroDeviceBox.width).toBeLessThanOrEqual(viewport.width);
+    } else {
+      expect(heroDeviceBox.width).toBeGreaterThanOrEqual(750);
+      expect(heroDeviceBox.width).toBeLessThanOrEqual(1050);
+      const heroSectionBox = await page.locator("main > section").first().boundingBox();
+      const connectedLineBox = await page.getByText("Connected technology.", { exact: true }).boundingBox();
+      expect(heroSectionBox).not.toBeNull();
+      expect(connectedLineBox).not.toBeNull();
+      if (heroSectionBox && connectedLineBox) {
+        const bottomGap = heroSectionBox.y + heroSectionBox.height - (heroDeviceBox.y + heroDeviceBox.height);
+        expect(bottomGap).toBeGreaterThanOrEqual(20);
+        expect(bottomGap).toBeLessThanOrEqual(100);
+        expect(Math.abs(heroDeviceBox.y - connectedLineBox.y)).toBeLessThanOrEqual(120);
+      }
+    }
+  }
+
+  const headerLogoBox = await page.getByRole("link", { name: "Driftline Tech home" }).locator("img").boundingBox();
+  expect(headerLogoBox).not.toBeNull();
+  if (headerLogoBox) expect(headerLogoBox.width).toBeGreaterThanOrEqual(isMobile ? 195 : 225);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(1);
+});
