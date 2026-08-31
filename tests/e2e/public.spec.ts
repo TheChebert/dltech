@@ -18,6 +18,12 @@ test("homepage presents services without unreleased products or named projects",
   await expect(page.locator("body")).not.toContainText(unreleasedNames);
   await expect(page.getByRole("navigation", { name: "Primary navigation" }).getByRole("link", { name: "Software" })).toHaveCount(0);
   await expect(page.getByRole("navigation", { name: "Primary navigation" }).getByRole("link", { name: "Work" })).toHaveCount(0);
+
+  const surfacePattern = await page.locator("main > section[data-surface]").evaluateAll((sections) =>
+    sections.map((section) => section.getAttribute("data-surface")),
+  );
+  expect(surfacePattern).toEqual(["dark", "dark", "light", "dark", "light"]);
+  await expect(page.getByRole("heading", { name: "You do not need a finished specification to begin." })).toBeVisible();
 });
 
 test("custom software remains a service while legacy product and work routes stay hidden", async ({ page }) => {
@@ -47,6 +53,15 @@ test("manifest uses the official dark app icon", async ({ request }) => {
   expect(response.ok()).toBe(true);
   const manifest = await response.json();
   expect(manifest.icons).toContainEqual(expect.objectContaining({ src: "/brand/Driftline-Tech-App-Icon-Dark.svg" }));
+});
+
+test("public pages do not expose launch-stage placeholder language", async ({ page }) => {
+  for (const path of ["/", "/services", "/about", "/contact", "/support", "/legal/privacy", "/legal/terms"]) {
+    await page.goto(path);
+    await expect(page.locator("body")).not.toContainText(
+      /provisional|production-ready|coming soon|placeholder|illustrative concept|legal review required/i,
+    );
+  }
 });
 
 test("protected customer route redirects to sign in", async ({ page }) => {

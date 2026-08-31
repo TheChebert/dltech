@@ -18,19 +18,19 @@ export default function SupportPage() {
       <section className="bg-[#f6f9fd] py-20">
         <div className="page-shell grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {[
-            [BookOpen, "Project documentation", "Questions about plans, handoff guidance, decisions, or materials from an active engagement.", "/contact?topic=support"],
-            [KeyRound, "Access & account help", "Help with secure access to a website, application, or system that Driftline supports.", "/contact?topic=support"],
-            [Download, "Updates & handoff", "Deployment, version, or handoff support for an active customer system.", "/contact?topic=support"],
-            [RefreshCw, "Ongoing maintenance", "Monitoring, improvements, incident response, and planned technical care.", "/services/support-maintenance"],
-            [LifeBuoy, "Contact support", "Tell us what happened, the system involved, and the impact on your team or customers.", "/contact?topic=support"],
-          ].map(([Icon, title, description, href]) => {
+            [BookOpen, "Project documentation", "Questions about plans, handoff guidance, decisions, or materials from an active engagement.", "/contact?topic=support", "Request project help"],
+            [KeyRound, "Access & account help", "Help with secure access to a website, application, or system that Driftline supports.", "/contact?topic=support", "Get account help"],
+            [Download, "Updates & handoff", "Deployment, version, or handoff support for an active customer system.", "/contact?topic=support", "Request handoff help"],
+            [RefreshCw, "Ongoing maintenance", "Monitoring, improvements, incident response, and planned technical care.", "/services/support-maintenance", "Explore maintenance"],
+            [LifeBuoy, "Contact support", "Tell us what happened, the system involved, and the impact on your team or customers.", "/contact?topic=support", "Contact support"],
+          ].map(([Icon, title, description, href, action]) => {
             const IconComponent = Icon as typeof BookOpen;
             return (
               <article key={title as string} className="flex min-h-[280px] flex-col rounded-2xl border border-slate-200 bg-white p-7">
                 <IconComponent className="size-7 text-blue-600" aria-hidden="true" />
                 <h2 className="mt-7 text-xl font-semibold text-slate-950">{title as string}</h2>
                 <p className="mt-3 text-sm leading-6 text-slate-600">{description as string}</p>
-                <Link href={href as string} className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-semibold text-blue-600">Open resource <ArrowRight className="size-4" /></Link>
+                <Link href={href as string} className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-semibold text-blue-600">{action as string} <ArrowRight className="size-4" /></Link>
               </article>
             );
           })}
