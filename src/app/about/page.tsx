@@ -7,14 +7,14 @@ import { MarketingShell } from "@/components/marketing-shell";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Learn how Driftline Tech approaches custom software, websites, automation, and long-term system ownership.",
+  description: "Learn how Driftline Tech, based in the La Crosse, Wisconsin area, approaches custom software, websites, automation, and long-term system ownership.",
   alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {
   return (
     <MarketingShell>
-      <InnerHero eyebrow="About Driftline" title="A technology company built around useful systems and clear ownership." description="Driftline Tech helps businesses design, build, connect, and support digital systems. The work stays grounded in what it takes to operate and improve technology after launch." />
+      <InnerHero eyebrow="About Driftline" title="A technology company built around useful systems and clear ownership." description="Based in the La Crosse, Wisconsin area, Driftline Tech helps businesses design, build, connect, and support digital systems. The work stays grounded in what it takes to operate and improve technology after launch." />
       <section className="surface-light py-20 sm:py-24">
         <div className="page-shell grid gap-12 lg:grid-cols-2">
           <div>
