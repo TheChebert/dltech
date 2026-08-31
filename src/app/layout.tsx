@@ -19,8 +19,11 @@ export const metadata: Metadata = {
   applicationName: "Driftline Tech",
   category: "technology",
   icons: {
-    icon: [{ url: "/brand/Driftline-Tech-App-Icon-Color.svg", type: "image/svg+xml" }],
-    shortcut: "/brand/Driftline-Tech-App-Icon-Color.svg",
+    icon: [
+      { url: "/brand/Driftline-Tech-App-Icon-Color.svg", type: "image/svg+xml", media: "(prefers-color-scheme: light)" },
+      { url: "/brand/Driftline-Tech-App-Icon-Dark.svg", type: "image/svg+xml", media: "(prefers-color-scheme: dark)" },
+    ],
+    shortcut: "/brand/Driftline-Tech-App-Icon-Dark.svg",
   },
   alternates: { canonical: "/" },
   openGraph: {

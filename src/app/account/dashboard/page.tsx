@@ -25,7 +25,7 @@ export default async function AccountDashboardPage() {
     <main className="min-h-screen bg-[#f6f9fd] text-slate-950">
       <header className="border-b border-slate-200 bg-white">
         <div className="page-shell flex h-20 items-center justify-between gap-6">
-          <Link href="/" aria-label="Driftline Tech home"><BrandLogo className="h-auto w-[190px]" /></Link>
+          <Link href="/" aria-label="Driftline Tech home"><BrandLogo variant="compact" className="h-auto w-[190px]" /></Link>
           <div className="flex items-center gap-4 text-sm">
             <span className="hidden text-slate-500 sm:inline">{user.email}</span>
             <form action="/auth/signout" method="post"><button className="rounded-lg border border-slate-300 px-4 py-2 font-medium hover:bg-slate-50">Sign out</button></form>
