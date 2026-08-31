@@ -20,7 +20,7 @@ export default async function AdminPage() {
 
   return (
     <main className="min-h-screen bg-[#f6f9fd]">
-      <header className="border-b border-slate-200 bg-white"><div className="page-shell flex h-20 items-center justify-between"><Link href="/"><BrandLogo className="h-auto w-[180px]" /></Link><span className="text-sm text-slate-500">Admin · {user.email}</span></div></header>
+      <header className="border-b border-slate-200 bg-white"><div className="page-shell flex h-20 items-center justify-between"><Link href="/"><BrandLogo variant="compact" className="h-auto w-[180px]" /></Link><span className="text-sm text-slate-500">Admin · {user.email}</span></div></header>
       <div className="page-shell py-12">
         <p className="section-kicker">Administration</p>
         <h1 className="mt-3 text-3xl font-semibold tracking-[-.035em] text-slate-950">Platform overview</h1>
