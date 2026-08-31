@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mail, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand-logo";
 
@@ -54,6 +54,9 @@ export function SiteFooter() {
             <a href="tel:+16085020949" className="inline-flex items-center gap-2 text-sm font-medium text-sky-400 hover:text-sky-300">
               <Phone className="size-4" aria-hidden="true" /> 608-502-0949
             </a>
+            <p className="inline-flex items-center gap-2 text-sm text-slate-400">
+              <MapPin className="size-4" aria-hidden="true" /> La Crosse, WI area
+            </p>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
