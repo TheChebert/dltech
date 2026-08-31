@@ -12,7 +12,7 @@ type CtaBandProps = {
 
 export function CtaBand({
   eyebrow = "Start a conversation",
-  title = "Have a product, workflow, or website that needs a better path forward?",
+  title = "Have a business system, workflow, or website that needs a better path forward?",
   description = "Tell us what is changing, what is getting in the way, and what a successful next step would look like.",
 }: CtaBandProps) {
   return (
