@@ -22,8 +22,8 @@ export default async function AccountDashboardPage() {
   ]);
 
   return (
-    <main className="min-h-screen bg-[#f6f9fd] text-slate-950">
-      <header className="border-b border-slate-200 bg-white">
+    <main className="surface-light min-h-screen text-slate-950">
+      <header className="surface-panel border-b border-slate-300/80">
         <div className="page-shell flex h-20 items-center justify-between gap-6">
           <Link href="/" aria-label="Driftline Tech home"><BrandLogo variant="compact" className="h-auto w-[190px]" /></Link>
           <div className="flex items-center gap-4 text-sm">
@@ -41,7 +41,7 @@ export default async function AccountDashboardPage() {
           <Metric icon={KeyRound} label="Licenses" value={licenses?.length ?? 0} />
           <Metric icon={Laptop} label="Active devices" value={activations?.filter((item) => !item.deactivated_at).length ?? 0} />
         </div>
-        <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6">
+        <section className="mt-8 surface-panel rounded-2xl border border-slate-300/80 p-6">
           <div className="flex items-center justify-between gap-4">
             <div><h2 className="text-xl font-semibold">Your products</h2><p className="mt-1 text-sm text-slate-500">Entitlements control license and download access.</p></div>
             <Download className="size-5 text-blue-600" />
@@ -55,7 +55,7 @@ export default async function AccountDashboardPage() {
                 </div>
               ))}
             </div>
-          ) : <p className="mt-6 rounded-xl bg-slate-50 p-5 text-sm text-slate-600">No product entitlements are attached to this account yet.</p>}
+          ) : <p className="mt-6 rounded-xl bg-[#e5ecf3] p-5 text-sm text-slate-600">No product entitlements are attached to this account yet.</p>}
         </section>
       </div>
     </main>
@@ -69,5 +69,5 @@ function productName(value: unknown) {
 }
 
 function Metric({ icon: Icon, label, value }: { icon: typeof PackageCheck; label: string; value: number }) {
-  return <div className="rounded-2xl border border-slate-200 bg-white p-6"><Icon className="size-5 text-blue-600" /><p className="mt-7 text-3xl font-semibold">{value}</p><p className="mt-1 text-sm text-slate-500">{label}</p></div>;
+  return <div className="surface-panel rounded-2xl border border-slate-300/80 p-6"><Icon className="size-5 text-blue-600" /><p className="mt-7 text-3xl font-semibold">{value}</p><p className="mt-1 text-sm text-slate-500">{label}</p></div>;
 }
