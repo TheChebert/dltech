@@ -44,7 +44,7 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
           </>
         }
       />
-      <section className="bg-white py-20 sm:py-24">
+      <section className="surface-light py-20 sm:py-24">
         <div className="page-shell grid gap-12 lg:grid-cols-[.85fr_1.15fr]">
           <div>
             <p className="section-kicker">What this should change</p>
@@ -53,7 +53,7 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
           </div>
           <div className="grid gap-4">
             {service.outcomes.map((outcome) => (
-              <div key={outcome} className="flex gap-4 rounded-2xl border border-slate-200 p-5">
+              <div key={outcome} className="surface-panel flex gap-4 rounded-2xl border border-slate-300/80 p-5">
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600"><Check className="size-4" aria-hidden="true" /></span>
                 <p className="pt-1 font-medium leading-7 text-slate-800">{outcome}</p>
               </div>
@@ -61,7 +61,7 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
           </div>
         </div>
       </section>
-      <section className="bg-[#f6f9fd] py-20 sm:py-24">
+      <section className="surface-light-alt py-20 sm:py-24">
         <div className="page-shell">
           <p className="section-kicker">Capabilities</p>
           <h2 className="mt-3 max-w-3xl text-3xl font-semibold tracking-[-.035em] text-slate-950">The pieces required to make the whole system work.</h2>
@@ -69,7 +69,7 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
             {service.capabilities.map((capability, index) => {
               const Icon = index % 3 === 0 ? Compass : index % 3 === 1 ? Layers3 : ShieldCheck;
               return (
-                <div key={capability} className="rounded-2xl border border-slate-200 bg-white p-6">
+                <div key={capability} className="surface-panel rounded-2xl border border-slate-300/80 p-6">
                   <Icon className="size-5 text-blue-600" aria-hidden="true" />
                   <h3 className="mt-6 font-semibold text-slate-950">{capability}</h3>
                 </div>
@@ -78,7 +78,7 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
           </div>
         </div>
       </section>
-      <section className="bg-[#071522] py-20 text-white">
+      <section className="surface-dark py-20 text-white">
         <div className="page-shell">
           <p className="section-kicker">A measured process</p>
           <div className="mt-10 grid gap-4 md:grid-cols-4">

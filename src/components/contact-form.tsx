@@ -42,7 +42,7 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_20px_65px_rgba(11,22,38,.08)] sm:p-8" noValidate>
+    <form onSubmit={submit} className="surface-panel space-y-5 rounded-2xl border border-slate-300/80 p-6 shadow-[0_20px_65px_rgba(11,22,38,.08)] sm:p-8" noValidate>
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Name" name="name" autoComplete="name" required maxLength={120} />
         <Field label="Work email" name="email" type="email" autoComplete="email" required maxLength={254} />
@@ -51,7 +51,7 @@ export function ContactForm() {
         <Field label="Company (optional)" name="company" autoComplete="organization" maxLength={160} />
         <label className="grid gap-2 text-sm font-medium text-slate-800">
           What can we help with?
-          <select name="topic" defaultValue="project" className="h-12 rounded-lg border border-slate-300 bg-white px-3 text-base text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-3 focus:ring-blue-100">
+          <select name="topic" defaultValue="project" className="h-12 rounded-lg border border-slate-300 bg-[#edf2f7] px-3 text-base text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-3 focus:ring-blue-100">
             <option value="project">New project</option>
             <option value="support">Support request</option>
             <option value="consulting">Technology consulting</option>
@@ -61,7 +61,7 @@ export function ContactForm() {
       </div>
       <label className="grid gap-2 text-sm font-medium text-slate-800">
         How can we help?
-        <textarea name="message" required minLength={20} maxLength={4000} rows={7} placeholder="Share the problem, the current situation, and what a useful next step would look like." className="rounded-lg border border-slate-300 bg-white px-3 py-3 text-base leading-7 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-3 focus:ring-blue-100" />
+        <textarea name="message" required minLength={20} maxLength={4000} rows={7} placeholder="Share the problem, the current situation, and what a useful next step would look like." className="rounded-lg border border-slate-300 bg-[#edf2f7] px-3 py-3 text-base leading-7 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-3 focus:ring-blue-100" />
       </label>
       <div className="hidden" aria-hidden="true">
         <label>Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
@@ -92,7 +92,7 @@ function Field({ label, name, type = "text", autoComplete, required, maxLength }
   return (
     <label className="grid gap-2 text-sm font-medium text-slate-800">
       {label}
-      <input name={name} type={type} autoComplete={autoComplete} required={required} maxLength={maxLength} className="h-12 rounded-lg border border-slate-300 bg-white px-3 text-base text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-3 focus:ring-blue-100" />
+      <input name={name} type={type} autoComplete={autoComplete} required={required} maxLength={maxLength} className="h-12 rounded-lg border border-slate-300 bg-[#edf2f7] px-3 text-base text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-3 focus:ring-blue-100" />
     </label>
   );
 }

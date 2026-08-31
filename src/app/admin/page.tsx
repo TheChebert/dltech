@@ -19,8 +19,8 @@ export default async function AdminPage() {
   ]);
 
   return (
-    <main className="min-h-screen bg-[#f6f9fd]">
-      <header className="border-b border-slate-200 bg-white"><div className="page-shell flex h-20 items-center justify-between"><Link href="/"><BrandLogo variant="compact" className="h-auto w-[180px]" /></Link><span className="text-sm text-slate-500">Admin · {user.email}</span></div></header>
+    <main className="surface-light min-h-screen">
+      <header className="surface-panel border-b border-slate-300/80"><div className="page-shell flex h-20 items-center justify-between"><Link href="/"><BrandLogo variant="compact" className="h-auto w-[180px]" /></Link><span className="text-sm text-slate-500">Admin · {user.email}</span></div></header>
       <div className="page-shell py-12">
         <p className="section-kicker">Administration</p>
         <h1 className="mt-3 text-3xl font-semibold tracking-[-.035em] text-slate-950">Platform overview</h1>
@@ -31,7 +31,7 @@ export default async function AdminPage() {
           <Metric icon={KeyRound} label="Licenses" value={licenses.count ?? 0} />
           <Metric icon={MessageSquare} label="Contact submissions" value={contacts.count ?? 0} />
         </div>
-        <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-7">
+        <section className="mt-8 surface-panel rounded-2xl border border-slate-300/80 p-7">
           <div className="flex items-center gap-3"><Activity className="size-5 text-blue-600" /><h2 className="text-xl font-semibold text-slate-950">Administrative foundation</h2></div>
           <p className="mt-4 max-w-3xl text-sm leading-6 text-slate-600">The database and authorization foundation supports product, release, pricing, download, customer, entitlement, license, activation, support, contact, webhook, and audit records. Purpose-built management workflows can be added as real operating processes are defined.</p>
         </section>
@@ -41,5 +41,5 @@ export default async function AdminPage() {
 }
 
 function Metric({ icon: Icon, label, value }: { icon: typeof PackageCheck; label: string; value: number }) {
-  return <div className="rounded-2xl border border-slate-200 bg-white p-6"><Icon className="size-5 text-blue-600" /><p className="mt-7 text-3xl font-semibold text-slate-950">{value}</p><p className="mt-1 text-sm text-slate-500">{label}</p></div>;
+  return <div className="surface-panel rounded-2xl border border-slate-300/80 p-6"><Icon className="size-5 text-blue-600" /><p className="mt-7 text-3xl font-semibold text-slate-950">{value}</p><p className="mt-1 text-sm text-slate-500">{label}</p></div>;
 }
