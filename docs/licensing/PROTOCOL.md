@@ -1,7 +1,9 @@
 # Driftline Application Licensing Protocol v1
 
-Canonical origin: `https://driftlinetech.com`  
-API prefix: `/api/v1`  
+Canonical origin: `https://driftlinetech.com`
+
+API prefix: `/api/v1`
+
 Protocol version: `1`
 
 This is the language-neutral contract for every Driftline application. Database rows, Supabase generated types, and display copy are not part of this contract.
