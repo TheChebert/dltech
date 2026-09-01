@@ -95,6 +95,18 @@ test("public pages do not expose launch-stage placeholder language", async ({ pa
   }
 });
 
+test("public routes keep the contact delivery email private", async ({ page, request }) => {
+  const publicPaths = ["/", "/services", "/about", "/contact", "/support", "/legal/privacy", "/legal/terms"];
+
+  for (const path of publicPaths) {
+    await page.goto(path);
+    await expect(page.locator("body")).not.toContainText("hello@driftlinetech.com");
+    await expect(page.locator('a[href^="mailto:"]')).toHaveCount(0);
+  }
+
+  const homeResponse = await request.get("/");
+  expect(await homeResponse.text()).not.toContain("hello@driftlinetech.com");
+});
 test("protected customer route redirects to sign in", async ({ page }) => {
   await page.goto("/account/dashboard");
   await expect(page).toHaveURL(/\/account/);

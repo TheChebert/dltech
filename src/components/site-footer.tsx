@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand-logo";
 
@@ -48,9 +48,6 @@ export function SiteFooter() {
             Thoughtful software, websites, automation, and technical systems built for real work.
           </p>
           <div className="mt-5 flex flex-col items-start gap-3">
-            <a href="mailto:hello@driftlinetech.com" className="inline-flex items-center gap-2 text-sm font-medium text-sky-400 hover:text-sky-300">
-              <Mail className="size-4" aria-hidden="true" /> hello@driftlinetech.com
-            </a>
             <a href="tel:+16085020949" className="inline-flex items-center gap-2 text-sm font-medium text-sky-400 hover:text-sky-300">
               <Phone className="size-4" aria-hidden="true" /> 608-502-0949
             </a>
