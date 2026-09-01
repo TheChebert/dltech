@@ -2,7 +2,7 @@ import "server-only";
 
 import { randomBytes } from "node:crypto";
 
-import type { ApiErrorCode, LicenseGrant } from "../../../../packages/licensing-sdk/src/types";
+import type { ApiErrorCode, LicenseGrant } from "../../../packages/licensing-sdk/src/types";
 
 import type { ActivatedLicenseInput, ActivationInput, DeactivationInput } from "./schemas";
 import { hashLicenseKey, parseLicenseKey, sha256, toBytea } from "./keys";
@@ -41,9 +41,10 @@ function mapFailure(result: DatabaseLicenseResult): DatabaseLicenseState {
     license_suspended: ["license_suspended", 403],
     license_revoked: ["license_revoked", 403],
     license_expired: ["license_expired", 403],
-    entitlement_suspended: ["license_suspended", 403],
+    entitlement_suspended: ["entitlement_suspended", 403],
     entitlement_refunded: ["license_revoked", 403],
     entitlement_expired: ["license_expired", 403],
+    entitlement_not_started: ["license_suspended", 403],
     activation_limit_reached: ["activation_limit_reached", 409],
     installation_conflict: ["installation_conflict", 409],
     installation_revoked: ["installation_revoked", 403],

@@ -1,8 +1,10 @@
-import { NextResponse } from "next/server";
+import { randomUUID } from "node:crypto";
 
+import { apiSuccess } from "@/lib/api/responses";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function GET() {
+  const requestId = randomUUID();
   const startedAt = Date.now();
   let database: "ok" | "unavailable" = "ok";
 
@@ -15,13 +17,10 @@ export async function GET() {
   }
 
   const healthy = database === "ok";
-  return NextResponse.json({
+  return apiSuccess(requestId, {
     status: healthy ? "ok" : "degraded",
     services: { website: "ok", database },
     timestamp: new Date().toISOString(),
     responseTimeMs: Date.now() - startedAt,
-  }, {
-    status: healthy ? 200 : 503,
-    headers: { "cache-control": "no-store" },
-  });
+  }, healthy ? 200 : 503);
 }

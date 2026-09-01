@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { LICENSE_PROTOCOL_VERSION } from "../../../../packages/licensing-sdk/src/types";
+import { LICENSE_PROTOCOL_VERSION } from "../../../packages/licensing-sdk/src/types";
 
 const productSlug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(120);
 const commonLicenseRequest = z.object({

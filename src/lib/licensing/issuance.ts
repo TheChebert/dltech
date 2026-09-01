@@ -4,12 +4,11 @@ import { createHash, randomUUID } from "node:crypto";
 
 import { createAdminClient } from "@/lib/supabase/admin";
 
-import { generateLicenseKey, hashLicenseKey, parseLicenseKey, toBytea } from "./keys";
+import { deriveLicenseKey, hashLicenseKey, parseLicenseKey, toBytea } from "./keys";
 
 export interface IssueLicenseInput {
   idempotencyKey: string;
   productSlug: string;
-  productCode: string;
   editionSlug: string;
   userId?: string;
   customerEmail?: string;
@@ -32,9 +31,18 @@ function requestHash(input: IssueLicenseInput) {
 }
 
 export async function issueLicense(input: IssueLicenseInput) {
-  const licenseKey = generateLicenseKey(input.productCode);
-  const parsed = parseLicenseKey(licenseKey)!;
   const supabase = createAdminClient();
+  const { data: product, error: productError } = await supabase
+    .from("products")
+    .select("product_code")
+    .eq("slug", input.productSlug)
+    .maybeSingle();
+  if (productError || !product) throw new Error("License issuance failed: product_not_found");
+  const licenseKey = deriveLicenseKey(
+    String(product.product_code),
+    input.orderItemId ?? input.idempotencyKey,
+  );
+  const parsed = parseLicenseKey(licenseKey)!;
   const { data, error } = await supabase.rpc("issue_license_v1", {
     p_idempotency_key: input.idempotencyKey,
     p_request_hash: toBytea(requestHash(input)),
@@ -56,6 +64,6 @@ export async function issueLicense(input: IssueLicenseInput) {
   return {
     created: result.created === true,
     licenseId: result.license_id!,
-    licenseKey: result.created === true ? licenseKey : null,
+    licenseKey,
   };
 }

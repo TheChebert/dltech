@@ -156,7 +156,26 @@ export class LicensingClient {
       });
     }
 
-    const envelope = await response.json() as ApiResponse<T>;
+    let envelope: ApiResponse<T>;
+    try {
+      envelope = await response.json() as ApiResponse<T>;
+    } catch (error) {
+      throw new LicensingError("service_unavailable", "The licensing service returned an unreadable response.", {
+        retryable: true,
+        cause: error,
+      });
+    }
+    if (
+      !envelope
+      || typeof envelope !== "object"
+      || envelope.protocolVersion !== LICENSE_PROTOCOL_VERSION
+      || typeof envelope.requestId !== "string"
+      || typeof envelope.ok !== "boolean"
+    ) {
+      throw new LicensingError("service_unavailable", "The licensing service returned an unsupported response.", {
+        retryable: true,
+      });
+    }
     if (!envelope.ok) throw LicensingError.fromApi(envelope.error, envelope.requestId);
     return envelope.data;
   }

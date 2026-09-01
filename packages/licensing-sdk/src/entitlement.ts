@@ -25,6 +25,45 @@ async function installationHash(installationId: string) {
   return bytesToHex(new Uint8Array(digest));
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function validDate(value: unknown) {
+  return typeof value === "string" && Number.isFinite(new Date(value).getTime());
+}
+
+function assertPayloadShape(value: unknown): asserts value is SignedEntitlementPayload {
+  if (!isRecord(value) || !isRecord(value.versionEntitlement)) {
+    throw new LicensingError("tampered_entitlement", "The entitlement payload is malformed.");
+  }
+  const scope = value.versionEntitlement.scope;
+  const majorVersion = value.versionEntitlement.majorVersion;
+  if (
+    value.schemaVersion !== LICENSE_ENTITLEMENT_SCHEMA_VERSION
+    || value.protocolVersion !== LICENSE_PROTOCOL_VERSION
+    || value.issuer !== "https://driftlinetech.com"
+    || typeof value.product !== "string"
+    || typeof value.edition !== "string"
+    || typeof value.licenseId !== "string"
+    || typeof value.installationIdHash !== "string"
+    || !["free", "perpetual", "subscription"].includes(String(value.licenseType))
+    || !Array.isArray(value.features)
+    || !value.features.every((feature) => typeof feature === "string")
+    || !["all_versions", "major"].includes(String(scope))
+    || (scope === "major" && (!Number.isInteger(majorVersion) || Number(majorVersion) < 1))
+    || (scope === "all_versions" && majorVersion !== null)
+    || !Number.isInteger(value.activationLimit)
+    || Number(value.activationLimit) < 0
+    || !validDate(value.issuedAt)
+    || !validDate(value.refreshAfter)
+    || !validDate(value.validUntil)
+    || (value.entitlementExpiresAt !== null && !validDate(value.entitlementExpiresAt))
+  ) {
+    throw new LicensingError("tampered_entitlement", "The entitlement payload is malformed.");
+  }
+}
+
 export function parseSignedEntitlement(token: string) {
   const parts = token.split(".");
   if (parts.length !== 3 || parts.some((part) => !part)) {
@@ -33,7 +72,8 @@ export function parseSignedEntitlement(token: string) {
 
   try {
     const header = JSON.parse(textDecoder.decode(base64UrlToBytes(parts[0]))) as SignedEntitlementHeader;
-    const payload = JSON.parse(textDecoder.decode(base64UrlToBytes(parts[1]))) as SignedEntitlementPayload;
+    const payload: unknown = JSON.parse(textDecoder.decode(base64UrlToBytes(parts[1])));
+    assertPayloadShape(payload);
     return { header, payload, signature: parts[2], signingInput: `${parts[0]}.${parts[1]}` };
   } catch (error) {
     throw new LicensingError("tampered_entitlement", "The entitlement could not be decoded.", { cause: error });
@@ -91,6 +131,7 @@ export async function verifySignedEntitlement(
   if (
     parsed.payload.schemaVersion !== LICENSE_ENTITLEMENT_SCHEMA_VERSION
     || parsed.payload.protocolVersion !== LICENSE_PROTOCOL_VERSION
+    || parsed.payload.issuer !== "https://driftlinetech.com"
     || parsed.payload.product !== options.productSlug
     || parsed.payload.installationIdHash !== await installationHash(options.installationId)
   ) {

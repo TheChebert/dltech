@@ -29,7 +29,7 @@ Every application table has Row Level Security enabled. Visitors can read only e
 
 ### Licensing
 
-Clients call versioned endpoints to activate, validate, and deactivate installations. Raw license keys, installation identifiers, activation tokens, and nonces are stored as hashes. Timestamp freshness, nonce uniqueness, and rate limits are checked before state changes.
+Applications call the canonical versioned API to discover policy and activate, validate, refresh, or deactivate an installation. License keys are HMAC-hashed with a server-only pepper; installation identifiers, activation tokens, and nonces are stored as one-way hashes. Ed25519-signed entitlements permit bounded offline use. Postgres row locks enforce activation limits under concurrency. See [the licensing architecture](./licensing/ARCHITECTURE.md).
 
 ### Release distribution
 
@@ -37,16 +37,17 @@ Release metadata is public only when a version is published. Binaries belong in 
 
 ### Commerce
 
-Orders, order items, webhook events, entitlements, and licenses are modeled, but checkout remains inactive until a payment provider is selected. Webhooks must verify provider signatures and process event ids idempotently before granting entitlements.
+Orders, order items, webhook events, entitlements, and licenses are modeled, but checkout remains inactive until a payment provider is selected. Generic webhook claiming and license issuance are idempotent; provider adapters must still verify signatures over the raw body before claiming an event.
 
 ## Repository layout
 
 - src/app — pages, route handlers, metadata, and APIs
 - src/components — shared presentation and forms
 - src/lib — content, authorization, Supabase clients, and API security
+- packages/licensing-sdk — Driftline application protocol reference client
 - supabase/migrations — schema, policies, functions, and seed data
 - tests/e2e — browser journeys
-- docs — architecture, platform, security, operations, and API contract
+- docs — architecture, platform, licensing protocol, security, operations, and API contract
 - .github — continuous integration and dependency updates
 
 ## Failure strategy

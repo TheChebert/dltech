@@ -33,6 +33,23 @@ export function generateLicenseKey(productCode: string) {
   return `DL-${normalizedCode}-${groups.join("-")}`;
 }
 
+export function deriveLicenseKey(
+  productCode: string,
+  idempotencyKey: string,
+  pepper = process.env.LICENSE_KEY_PEPPER,
+) {
+  const normalizedCode = productCode.trim().toUpperCase();
+  if (!/^[A-Z0-9]{2,8}$/.test(normalizedCode) || !pepper || idempotencyKey.length < 8) {
+    throw new Error("Deterministic license key generation is not configured.");
+  }
+  const entropy = createHmac("sha256", pepper)
+    .update(`issuance:v1:${normalizedCode}:${idempotencyKey}`, "utf8")
+    .digest();
+  let characters = "";
+  for (const byte of entropy.subarray(0, 20)) characters += KEY_ALPHABET[byte & 31];
+  return `DL-${normalizedCode}-${characters.match(/.{4}/g)!.join("-")}`;
+}
+
 export function hashLicenseKey(value: string, pepper = process.env.LICENSE_KEY_PEPPER) {
   const parsed = parseLicenseKey(value);
   if (!parsed || !pepper) throw new Error("License key hashing is not configured.");

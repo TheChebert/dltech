@@ -30,7 +30,7 @@ export function apiSuccess<T>(requestId: string, data: T, status = 200, headers?
   const body: ApiSuccess<T> = { protocolVersion: LICENSE_PROTOCOL_VERSION, requestId, ok: true, data };
   return NextResponse.json(body, {
     status,
-    headers: { "cache-control": "no-store", ...headers },
+    headers: { "cache-control": "no-store", "x-request-id": requestId, ...headers },
   });
 }
 
@@ -54,6 +54,7 @@ export function apiFailure(
     status,
     headers: {
       "cache-control": "no-store",
+      "x-request-id": requestId,
       ...(options?.retryAfter ? { "retry-after": String(options.retryAfter) } : {}),
     },
   });

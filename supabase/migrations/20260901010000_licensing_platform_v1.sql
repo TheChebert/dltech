@@ -56,7 +56,8 @@ where ranked.id = feature.id;
 alter table public.product_features
   alter column feature_key set not null,
   add constraint product_features_key_format_check check (feature_key::text ~ '^[a-z0-9]+(?:-[a-z0-9]+)*$'),
-  add constraint product_features_product_key_key unique (product_id, feature_key);
+  add constraint product_features_product_key_key unique (product_id, feature_key),
+  add constraint product_features_id_product_key unique (id, product_id);
 
 alter table public.product_platforms add column platform_key citext;
 
@@ -111,11 +112,15 @@ create table public.product_editions (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   unique(product_id, slug),
+  unique(id, product_id),
   check (
     (default_version_scope = 'all_versions' and default_major_version is null)
     or (default_version_scope = 'major' and default_major_version is not null)
   ),
-  check (activation_required or default_activation_limit = 0)
+  check (
+    (activation_required and default_activation_limit between 1 and 1000)
+    or (not activation_required and default_activation_limit = 0)
+  )
 );
 
 create unique index product_editions_default_idx
@@ -123,10 +128,13 @@ create unique index product_editions_default_idx
   where is_default and status = 'active';
 
 create table public.edition_features (
-  edition_id uuid not null references public.product_editions(id) on delete cascade,
-  feature_id uuid not null references public.product_features(id) on delete cascade,
+  product_id uuid not null references public.products(id) on delete cascade,
+  edition_id uuid not null,
+  feature_id uuid not null,
   created_at timestamptz not null default now(),
-  primary key (edition_id, feature_id)
+  primary key (edition_id, feature_id),
+  foreign key (edition_id, product_id) references public.product_editions(id, product_id) on delete cascade,
+  foreign key (feature_id, product_id) references public.product_features(id, product_id) on delete cascade
 );
 
 insert into public.product_editions (
@@ -160,6 +168,11 @@ on conflict (product_id, slug) do nothing;
 alter table public.product_prices
   add column edition_id uuid references public.product_editions(id) on delete restrict;
 
+alter table public.product_prices
+  drop constraint product_prices_edition_id_fkey,
+  add constraint product_prices_edition_product_fkey
+    foreign key (edition_id, product_id) references public.product_editions(id, product_id) on delete restrict;
+
 create index product_prices_edition_active_idx
   on public.product_prices(edition_id, currency, billing_interval)
   where active;
@@ -177,17 +190,24 @@ alter table public.entitlements
 update public.entitlements as entitlement
 set
   edition_id = edition.id,
-  activation_limit = coalesce(license.max_activations, 1),
+  activation_limit = coalesce((
+    select license.max_activations
+    from public.licenses as license
+    where license.entitlement_id = entitlement.id
+  ), 1),
   version_scope = case when entitlement.version_policy ~ '^major:[0-9]+$' then 'major'::public.version_entitlement_scope else 'all_versions'::public.version_entitlement_scope end,
   major_version = case when entitlement.version_policy ~ '^major:[0-9]+$' then split_part(entitlement.version_policy, ':', 2)::integer else null end
 from public.product_editions as edition
-left join public.licenses as license on license.entitlement_id = entitlement.id
 where edition.product_id = entitlement.product_id
   and edition.slug = 'standard'
   and entitlement.edition_id is null;
 
 alter table public.entitlements
   alter column edition_id set not null,
+  drop constraint entitlements_edition_id_fkey,
+  add constraint entitlements_id_product_key unique (id, product_id),
+  add constraint entitlements_edition_product_fkey
+    foreign key (edition_id, product_id) references public.product_editions(id, product_id) on delete restrict,
   add constraint entitlements_owner_check check (user_id is not null or customer_email is not null),
   add constraint entitlements_version_scope_check check (
     (version_scope = 'all_versions' and major_version is null)
@@ -203,14 +223,17 @@ create index entitlements_email_product_idx
   where customer_email is not null;
 
 create table public.entitlement_features (
-  entitlement_id uuid not null references public.entitlements(id) on delete cascade,
-  feature_id uuid not null references public.product_features(id) on delete restrict,
+  product_id uuid not null references public.products(id) on delete cascade,
+  entitlement_id uuid not null,
+  feature_id uuid not null,
   created_at timestamptz not null default now(),
-  primary key (entitlement_id, feature_id)
+  primary key (entitlement_id, feature_id),
+  foreign key (entitlement_id, product_id) references public.entitlements(id, product_id) on delete cascade,
+  foreign key (feature_id, product_id) references public.product_features(id, product_id) on delete restrict
 );
 
-insert into public.entitlement_features(entitlement_id, feature_id)
-select entitlement.id, edition_feature.feature_id
+insert into public.entitlement_features(product_id, entitlement_id, feature_id)
+select entitlement.product_id, entitlement.id, edition_feature.feature_id
 from public.entitlements as entitlement
 join public.edition_features as edition_feature on edition_feature.edition_id = entitlement.edition_id
 on conflict do nothing;
@@ -222,6 +245,12 @@ alter table public.licenses
   add column last_status_changed_at timestamptz not null default now(),
   add constraint licenses_key_hash_length_check check (octet_length(key_hash) = 32),
   add constraint licenses_expiry_check check (expires_at is null or expires_at > issued_at);
+
+alter table public.licenses
+  drop constraint licenses_entitlement_id_fkey,
+  add constraint licenses_id_product_key unique (id, product_id),
+  add constraint licenses_entitlement_product_fkey
+    foreign key (entitlement_id, product_id) references public.entitlements(id, product_id) on delete cascade;
 
 update public.licenses
 set key_suffix = upper(substr(encode(key_hash, 'hex'), 61, 4))
@@ -243,19 +272,34 @@ alter table public.application_installations
 
 alter table public.application_installations
   alter column user_id drop not null,
-  add constraint installations_hash_length_check check (octet_length(installation_id_hash) = 32);
+  add constraint installations_hash_length_check check (octet_length(installation_id_hash) = 32),
+  add constraint installations_id_product_key unique (id, product_id);
 
 alter table public.license_activations
   rename column activated_at to first_activated_at;
 
 alter table public.license_activations
+  add column product_id uuid,
   add column last_activated_at timestamptz not null default now(),
   add column activation_count integer not null default 1 check (activation_count > 0),
   add column updated_at timestamptz not null default now(),
   add constraint activation_token_hash_length_check check (octet_length(activation_token_hash) = 32);
 
 update public.license_activations
-set last_activated_at = first_activated_at;
+set
+  last_activated_at = first_activated_at,
+  product_id = license.product_id
+from public.licenses as license
+where license.id = license_activations.license_id;
+
+alter table public.license_activations
+  alter column product_id set not null,
+  drop constraint license_activations_license_id_fkey,
+  drop constraint license_activations_installation_id_fkey,
+  add constraint license_activations_license_product_fkey
+    foreign key (license_id, product_id) references public.licenses(id, product_id) on delete cascade,
+  add constraint license_activations_installation_product_fkey
+    foreign key (installation_id, product_id) references public.application_installations(id, product_id) on delete cascade;
 
 create table public.license_signing_keys (
   key_id text primary key check (key_id ~ '^[a-z0-9]+(?:-[a-z0-9]+)*$'),
@@ -289,7 +333,7 @@ create table public.license_issuance_requests (
   created_at timestamptz not null default now()
 );
 
-create index license_issuance_order_item_idx
+create unique index license_issuance_order_item_idx
   on public.license_issuance_requests(order_item_id)
   where order_item_id is not null;
 
@@ -431,6 +475,7 @@ declare
   v_installation record;
   v_activation public.license_activations%rowtype;
   v_active_count integer;
+  v_installation_created boolean := false;
   v_now timestamptz := now();
   v_result jsonb;
 begin
@@ -503,13 +548,16 @@ begin
     v_now,
     v_now
   )
-  on conflict (product_id, installation_id_hash) do update
-  set
-    device_name = excluded.device_name,
-    platform = excluded.platform,
-    app_version = excluded.app_version,
-    last_seen_at = excluded.last_seen_at
-  returning id, user_id, revoked_at into v_installation;
+  on conflict (product_id, installation_id_hash) do nothing;
+
+  get diagnostics v_active_count = row_count;
+  v_installation_created := v_active_count = 1;
+
+  select id, user_id, revoked_at into v_installation
+  from public.application_installations
+  where product_id = v_license.product_id
+    and installation_id_hash = p_installation_id_hash
+  for update;
 
   if v_installation.revoked_at is not null then
     return jsonb_build_object('ok', false, 'code', 'installation_revoked');
@@ -520,6 +568,14 @@ begin
     and v_installation.user_id <> v_license.user_id then
     return jsonb_build_object('ok', false, 'code', 'installation_conflict');
   end if;
+
+  update public.application_installations
+  set
+    device_name = p_device_name,
+    platform = p_platform,
+    app_version = p_app_version,
+    last_seen_at = v_now
+  where id = v_installation.id;
 
   select * into v_activation
   from public.license_activations
@@ -543,6 +599,9 @@ begin
       and deactivated_at is null;
 
     if v_active_count >= v_license.max_activations then
+      if v_installation_created then
+        delete from public.application_installations where id = v_installation.id;
+      end if;
       return jsonb_build_object('ok', false, 'code', 'activation_limit_reached');
     end if;
 
@@ -561,6 +620,7 @@ begin
       where id = v_activation.id;
     else
       insert into public.license_activations (
+        product_id,
         license_id,
         installation_id,
         activation_token_hash,
@@ -570,6 +630,7 @@ begin
         device_name,
         platform
       ) values (
+        v_license.product_id,
         v_license.license_id,
         v_installation.id,
         p_activation_token_hash,
@@ -777,7 +838,7 @@ begin
     return jsonb_build_object('ok', false, 'code', 'owner_required');
   end if;
 
-  perform pg_advisory_xact_lock(hashtextextended(p_idempotency_key, 0));
+  perform pg_advisory_xact_lock(hashtextextended(coalesce(p_order_item_id::text, p_idempotency_key), 0));
 
   select * into v_existing
   from public.license_issuance_requests
@@ -789,6 +850,20 @@ begin
       return jsonb_build_object('ok', false, 'code', 'idempotency_conflict');
     end if;
     return jsonb_build_object('ok', true, 'created', false, 'license_id', v_existing.license_id);
+  end if;
+
+  if p_order_item_id is not null then
+    select * into v_existing
+    from public.license_issuance_requests
+    where order_item_id = p_order_item_id
+    for update;
+
+    if found then
+      if v_existing.request_hash <> p_request_hash then
+        return jsonb_build_object('ok', false, 'code', 'idempotency_conflict');
+      end if;
+      return jsonb_build_object('ok', true, 'created', false, 'license_id', v_existing.license_id);
+    end if;
   end if;
 
   select
@@ -841,7 +916,7 @@ begin
     source
   ) values (
     p_user_id,
-    nullif(trim(p_customer_email), '')::citext,
+    nullif(trim(p_customer_email), '')::public.citext,
     v_edition.product_id,
     v_edition.edition_id,
     p_order_item_id,
@@ -856,8 +931,8 @@ begin
     case when p_order_item_id is null then 'admin' else 'order' end
   ) returning id into v_entitlement_id;
 
-  insert into public.entitlement_features(entitlement_id, feature_id)
-  select v_entitlement_id, feature_id
+  insert into public.entitlement_features(product_id, entitlement_id, feature_id)
+  select v_edition.product_id, v_entitlement_id, feature_id
   from public.edition_features
   where edition_id = v_edition.edition_id;
 

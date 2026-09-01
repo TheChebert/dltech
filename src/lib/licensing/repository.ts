@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { LicenseType, LicensingPolicy, VersionEntitlementScope } from "../../../../packages/licensing-sdk/src/types";
+import type { LicenseType, LicensingPolicy, VersionEntitlementScope } from "../../../packages/licensing-sdk/src/types";
 
 import { createAdminClient } from "@/lib/supabase/admin";
 

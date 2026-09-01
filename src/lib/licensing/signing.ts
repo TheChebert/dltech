@@ -7,7 +7,7 @@ import {
   LICENSE_PROTOCOL_VERSION,
   type SignedEntitlementHeader,
   type SignedEntitlementPayload,
-} from "../../../../packages/licensing-sdk/src/types";
+} from "../../../packages/licensing-sdk/src/types";
 
 import type { DatabaseLicenseState } from "./repository";
 

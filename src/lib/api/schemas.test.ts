@@ -3,9 +3,10 @@ import { describe, expect, it } from "vitest";
 import { activationSchema, validationSchema } from "@/lib/api/schemas";
 
 const request = {
-  productSlug: "ezebay-listing-manager",
-  licenseKey: "DLT-EXAMPLE-KEY-123456789",
-  deviceFingerprint: "device-fingerprint-at-least-16",
+  protocolVersion: 1,
+  productSlug: "metatweak",
+  licenseKey: "DL-MT-ABCD-EFGH-JKLM-NPQR-STUV",
+  installationId: "3d251c67-5efd-4c19-b3fb-72a240b3ddbf",
   deviceName: "Office PC",
   platform: "windows",
   appVersion: "1.0.0",
@@ -18,13 +19,18 @@ describe("license request validation", () => {
     expect(activationSchema.safeParse(request).success).toBe(true);
   });
 
-  it("rejects malformed product slugs and weak fingerprints", () => {
+  it("rejects malformed product slugs and installation identifiers", () => {
     expect(activationSchema.safeParse({ ...request, productSlug: "../admin" }).success).toBe(false);
-    expect(activationSchema.safeParse({ ...request, deviceFingerprint: "short" }).success).toBe(false);
+    expect(activationSchema.safeParse({ ...request, installationId: "raw-hardware-serial" }).success).toBe(false);
   });
 
   it("requires a separate activation token for validation", () => {
     expect(validationSchema.safeParse(request).success).toBe(false);
-    expect(validationSchema.safeParse({ ...request, activationToken: "a".repeat(48) }).success).toBe(true);
+    expect(validationSchema.safeParse({
+      ...request,
+      licenseKey: undefined,
+      licenseId: "b0242ba0-1afc-4a83-a489-856f47989381",
+      activationToken: "a".repeat(48),
+    }).success).toBe(true);
   });
 });
