@@ -10,6 +10,9 @@ Required variables:
 - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 - SUPABASE_SECRET_KEY
 - NEXT_PUBLIC_SITE_URL for the canonical production origin
+- LICENSE_KEY_PEPPER for server-only key hashing and deterministic issuance
+- LICENSE_SIGNING_KEY_ID identifying the active public verification key
+- LICENSE_SIGNING_PRIVATE_KEY containing base64url PKCS8 Ed25519 private key material
 
 ## Branch and release flow
 
@@ -30,6 +33,9 @@ Migrations in supabase/migrations are authoritative and ship with the applicatio
 
 - Home, services, software, contact, account, sitemap, robots, and social image return successfully.
 - GET /api/v1/health reports ok.
+- GET /api/v1/products/metatweak/licensing returns protocol v1, Free/Pro policy, and the expected public signing key.
+- Malformed activation returns a normalized protocol-v1 error without secret data.
+- GET /api/v1/products/metatweak/versions/latest returns a normalized not-found response until a release is published.
 - Contact submissions work without exposing records.
 - Security headers are present.
 - Published products load from Supabase.

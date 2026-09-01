@@ -47,17 +47,17 @@ export async function consumeNonce(scope: string, nonce: string, timestamp: stri
   if (drift > 5 * 60 * 1000) return { ok: false as const, reason: "expired_request" };
 
   const supabase = createAdminClient();
-  const { error } = await supabase.from("request_nonces").insert({
-    scope,
-    nonce_hash: toBytea(sha256Hex(nonce)),
-    expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+  const { data, error } = await supabase.rpc("consume_request_nonce_v1", {
+    p_scope: scope,
+    p_nonce_hash: toBytea(sha256Hex(nonce)),
+    p_expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
   });
 
-  if (error?.code === "23505") return { ok: false as const, reason: "replayed_request" };
   if (error) {
     console.error("nonce_write_failed", { code: error.code });
     return { ok: false as const, reason: "unavailable" };
   }
+  if (data !== true) return { ok: false as const, reason: "replayed_request" };
   return { ok: true as const };
 }
 
@@ -67,6 +67,7 @@ export async function writeApiLog(input: {
   status: number;
   request: Request;
   startedAt: number;
+  requestId: string;
   productId?: string | null;
   licenseId?: string | null;
   metadata?: Record<string, unknown>;
@@ -75,6 +76,7 @@ export async function writeApiLog(input: {
     const supabase = createAdminClient();
     await supabase.from("api_request_logs").insert({
       route: input.route,
+      request_id: input.requestId,
       method: input.method,
       response_status: input.status,
       ip_address: getClientIp(input.request) === "unknown" ? null : getClientIp(input.request),

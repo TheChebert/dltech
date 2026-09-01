@@ -23,12 +23,14 @@ Release files belong in the private product-releases bucket. A production downlo
 Version one exposes:
 
 - GET /api/v1/health
-- GET /api/v1/products/{slug}/releases/latest
+- GET /api/v1/products/{slug}/licensing
+- GET /api/v1/products/{slug}/versions/latest
 - POST /api/v1/licenses/activate
 - POST /api/v1/licenses/validate
+- POST /api/v1/licenses/refresh
 - POST /api/v1/licenses/deactivate
 
-Activation and validation enforce license status, entitlement state, product match, activation limit, timestamp freshness, nonce uniqueness, and rate limits.
+All endpoints return stable protocol-v1 envelopes. Activation and validation enforce license status, entitlement state, product match, activation limit, timestamp freshness, nonce uniqueness, and rate limits. Paid grants are Ed25519-signed for bounded offline use. `/releases/latest` remains only as a preliminary compatibility alias. See [the application protocol](./licensing/PROTOCOL.md).
 
 ## Contact and support
 
@@ -43,7 +45,7 @@ Before checkout is enabled:
 3. Verify signed webhooks against the raw request body.
 4. store the provider event id and reject duplicate processing.
 5. Grant or revoke entitlements transactionally.
-6. Generate license keys once, store only a hash, and deliver the raw key through an authenticated channel.
+6. Use the generic idempotent issuance routine; store only HMAC hash plus support prefix/suffix and deliver the reproducible raw key through an authenticated channel.
 7. Add provider sandbox tests and operational alerts.
 
 ## Content guidance

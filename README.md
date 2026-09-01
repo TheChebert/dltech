@@ -1,6 +1,6 @@
 # Driftline Tech
 
-Production: https://dltech-six.vercel.app
+Production: https://driftlinetech.com
 
 Production website and supporting platform for Driftline Tech. The application combines the public marketing site, customer account area, support foundation, product catalog, and secure licensing APIs in one deployable Next.js service.
 
@@ -25,6 +25,8 @@ The server secret is server-only. Never expose it through a NEXT_PUBLIC variable
 - npm run lint
 - npm run typecheck
 - npm test
+- npm run test:db
+- npm run test:licensing-concurrency
 - npm run test:e2e
 - npm run build
 
@@ -43,7 +45,12 @@ Changes move through dev, staging, and main. Pull requests run linting, type che
 - docs/security.md — controls and pre-launch security checklist
 - docs/operations.md — release, rollback, and incident procedures
 - docs/openapi.yaml — versioned API contract
+- docs/licensing/ARCHITECTURE.md — canonical licensing domain and trust boundaries
+- docs/licensing/PROTOCOL.md — language-neutral application contract
+- docs/licensing/APP-INTEGRATION.md — shared SDK application guide
+- docs/licensing/SECURITY.md — licensing threat model and controls
+- docs/licensing/TESTING.md — database, concurrency, SDK, and release tests
 
 ## Current product status
 
-The marketing experience, account shell, product catalog, contact workflow, admin authorization boundary, licensing API foundation, database security policies, and deployment pipeline are implemented. Checkout and payment webhooks are intentionally inactive until a provider and commercial terms are approved. Legal pages are operational drafts requiring counsel review before a public commercial launch.
+The marketing experience, account shell, product catalog, contact workflow, admin authorization boundary, reusable licensing protocol/API/SDK, database security policies, and deployment pipeline are implemented. Checkout remains inactive until a provider and commercial terms are approved. Legal pages are operational drafts requiring counsel review before a public commercial launch.

@@ -1,6 +1,5 @@
 import { latestVersionResponse } from "@/lib/licensing/catalog-http";
 
-// Compatibility alias retained for preliminary clients. New applications use /versions/latest.
 export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   return latestVersionResponse(request, slug);

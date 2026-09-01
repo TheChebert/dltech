@@ -14,7 +14,9 @@
 - Least-privilege anonymous and authenticated grants
 - Server-side admin authorization from database roles
 - Private release storage
-- SHA-256 hashing for license keys and device identifiers
+- Server-peppered HMAC-SHA-256 license-key storage and privacy-conscious installation UUID hashing
+- Ed25519-signed, versioned offline entitlements with bounded grace
+- Row-locked transactional activation limits and idempotent issuance/order constraints
 - Single-use hashed nonces and timestamp freshness checks
 - Database-backed rate limits
 - Honeypot and rate limits on contact submissions
@@ -22,6 +24,8 @@
 - Structured API errors without stack traces
 - Content Security Policy, HSTS, frame blocking, MIME sniff protection, restrictive permissions, and strict referrer policy
 - Dependency audit and automated release gates
+
+The detailed licensing threat model, key rotation, replay controls, offline tradeoff, and webhook requirements are in [licensing/SECURITY.md](./licensing/SECURITY.md).
 
 ## Secret handling
 
