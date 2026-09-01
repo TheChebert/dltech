@@ -1,0 +1,2 @@
+-- Local resets are fully reproducible from migrations.
+-- Add local-only fixtures here if they are ever needed; do not place production state in this file.

@@ -1,0 +1,14 @@
+{
+  "name": "@driftline/licensing",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Reference client for the Driftline Application Licensing Protocol v1.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ]
+}
