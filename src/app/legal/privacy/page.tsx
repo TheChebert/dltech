@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { InnerHero } from "@/components/inner-hero";
 import { MarketingShell } from "@/components/marketing-shell";
@@ -19,7 +20,7 @@ export default function PrivacyPage() {
         <h2>7. Retention and security</h2><p>We retain information only as long as reasonably needed for the purpose it was collected, including service delivery, security, recordkeeping, and legal obligations. We use administrative and technical safeguards appropriate to the information and service, but no system can guarantee absolute security.</p>
         <h2>8. Your choices</h2><p>You may ask to access, correct, or delete information associated with you. Some records may need to be retained for security, contractual, or legal reasons. Additional rights may apply depending on where you live.</p>
         <h2>9. Changes to this policy</h2><p>We may update this policy as the site, services, or legal requirements change. The date at the top identifies the current version.</p>
-        <h2>10. Contact</h2><p>Privacy questions or requests can be sent to <a href="mailto:hello@driftlinetech.com">hello@driftlinetech.com</a>.</p>
+        <h2>10. Contact</h2><p>Privacy questions or requests can be submitted through the <Link href="/contact">contact form</Link>.</p>
       </LegalContent>
     </MarketingShell>
   );

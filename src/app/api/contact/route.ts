@@ -67,7 +67,7 @@ export async function POST(request: Request) {
   if (error || !submission) {
     console.error("contact_submission_failed", { code: error?.code ?? "missing_submission" });
     return NextResponse.json(
-      { message: "Your message could not be saved. Please email hello@driftlinetech.com." },
+      { message: "Your message could not be saved. Please call 608-502-0949." },
       { status: 503 },
     );
   }
