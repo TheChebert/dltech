@@ -48,7 +48,6 @@ const organization = {
   name: "Driftline Tech",
   url: siteOrigin,
   logo: siteOrigin + "/brand/Driftline-Tech-Primary-Logo.svg",
-  email: "hello@driftlinetech.com",
   telephone: "+1-608-502-0949",
   description: "Custom software, web design, automation, AI solutions, integrations, support, and technology consulting.",
 };

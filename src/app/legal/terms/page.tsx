@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { InnerHero } from "@/components/inner-hero";
 import { MarketingShell } from "@/components/marketing-shell";
@@ -19,7 +20,7 @@ export default function TermsPage() {
         <h2>6. Third-party services and links</h2><p>The site and customer work may rely on third-party platforms or link to external websites. Those services operate under their own terms and privacy practices, and Driftline Tech is not responsible for content or changes outside its control.</p>
         <h2>7. Availability and informational content</h2><p>We work to keep the site accurate and available, but content may change and uninterrupted operation is not guaranteed. Public site content is general information and is not a substitute for a project-specific written commitment.</p>
         <h2>8. Changes to these terms</h2><p>We may update these terms as the site, services, or legal requirements change. The date above identifies the current version. Continued use after an update means the revised terms apply from that point forward.</p>
-        <h2>9. Contact</h2><p>Questions about these terms can be sent to <a href="mailto:hello@driftlinetech.com">hello@driftlinetech.com</a>.</p>
+        <h2>9. Contact</h2><p>Questions about these terms can be submitted through the <Link href="/contact">contact form</Link>.</p>
       </article>
     </MarketingShell>
   );
