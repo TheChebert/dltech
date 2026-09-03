@@ -26,6 +26,11 @@ function publicClient() {
   return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
 }
 
+function configuredStripeEnvironment() {
+  const environment = process.env.STRIPE_ENVIRONMENT;
+  return environment === "test" || environment === "live" ? environment : null;
+}
+
 function mapProduct(row: ProductRow): Product {
   const configuredAccent = row.metadata?.accent;
   const accent = configuredAccent === "emerald" || configuredAccent === "violet" || configuredAccent === "blue"
@@ -84,6 +89,7 @@ export type PublicEdition = {
 export async function getPublicProductEditions(slug: string): Promise<PublicEdition[]> {
   const supabase = publicClient();
   if (!supabase) return [];
+  const stripeEnvironment = configuredStripeEnvironment();
   const { data: product } = await supabase.from("products").select("id").eq("slug", slug).eq("status", "available").maybeSingle();
   if (!product) return [];
   const [{ data: editions }, { data: features }, { data: grants }, { data: prices }] = await Promise.all([
@@ -95,7 +101,10 @@ export async function getPublicProductEditions(slug: string): Promise<PublicEdit
   if (!editions) return [];
   const featureKeys = new Map((features ?? []).map((feature) => [feature.id, feature.feature_key]));
   return editions.map((edition) => {
-    const price = (prices ?? []).find((item) => item.edition_id === edition.id && (item.provider === "internal" || item.environment === "test"));
+    const price = (prices ?? []).find((item) => (
+      item.edition_id === edition.id
+      && (item.provider === "internal" || (item.provider === "stripe" && item.environment === stripeEnvironment))
+    ));
     return {
       id: edition.id,
       code: edition.code,

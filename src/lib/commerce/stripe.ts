@@ -9,6 +9,7 @@ export function getStripeEnvironment() {
   if (value !== "test" && value !== "live") throw new Error("STRIPE_ENVIRONMENT must be test or live.");
   return value;
 }
+
 export function getStripe() {
   const secretKey = process.env.STRIPE_SECRET_KEY;
   if (!secretKey) throw new Error("Missing required server environment variable: STRIPE_SECRET_KEY");
@@ -18,6 +19,7 @@ export function getStripe() {
   stripeClient ||= new Stripe(secretKey, { appInfo: { name: "Driftline Platform", version: "1.0.0" } });
   return stripeClient;
 }
+
 export function getStripeWebhookSecret() {
   const value = process.env.STRIPE_WEBHOOK_SECRET;
   if (!value) throw new Error("Missing required server environment variable: STRIPE_WEBHOOK_SECRET");

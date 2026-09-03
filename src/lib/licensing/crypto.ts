@@ -3,10 +3,12 @@ import { createCipheriv, createDecipheriv, createPrivateKey, createPublicKey, ra
 function base64UrlJson(value: unknown) {
   return Buffer.from(JSON.stringify(value), "utf8").toString("base64url");
 }
+
 export function loadEd25519PrivateKey(value: string) {
   if (value.includes("BEGIN PRIVATE KEY")) return createPrivateKey(value);
   return createPrivateKey({ key: Buffer.from(value, "base64"), format: "der", type: "pkcs8" });
 }
+
 export function signCompactJws(payload: Record<string, unknown>, privateKeyValue: string, keyId: string) {
   const privateKey = loadEd25519PrivateKey(privateKeyValue);
   if (privateKey.asymmetricKeyType !== "ed25519") throw new Error("Entitlement signing key must be Ed25519.");

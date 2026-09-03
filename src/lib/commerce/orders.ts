@@ -17,11 +17,13 @@ export function createLicenseMaterial() {
     keyCiphertext: encryptLicenseKey(licenseKey, encryptionKey),
   };
 }
+
 export function recoverLicenseKey(ciphertext: string) {
   const encryptionKey = process.env.DRIFTLINE_LICENSE_KEY_ENCRYPTION_KEY;
   if (!encryptionKey) throw new Error("Missing required server environment variable: DRIFTLINE_LICENSE_KEY_ENCRYPTION_KEY");
   return decryptLicenseKey(ciphertext, encryptionKey);
 }
+
 export function createCheckoutAccess() {
   const accessToken = randomBytes(32).toString("base64url");
   return { accessToken, accessTokenHash: toBytea(sha256Hex(accessToken)) };
