@@ -60,6 +60,14 @@ Set these server-only values:
 
 Deploy once so the HTTPS webhook URL exists. In Stripe Test Mode, create `https://<non-production-host>/api/v1/webhooks/stripe`, subscribe to `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`, and `checkout.session.expired`, then store that endpoint's `whsec_...` as `STRIPE_WEBHOOK_SECRET`. Redeploy after adding the webhook secret.
 
+The current `codex/licensing-v1-nonprod` Preview is protected by Vercel Authentication, so Stripe cannot call its webhook URL unauthenticated. Before creating the Stripe endpoint, choose one approved non-production access method:
+
+1. Preferred for this temporary test: create a dedicated Vercel Protection Bypass for Automation secret for Stripe Test, and configure the endpoint as `https://<non-production-host>/api/v1/webhooks/stripe?x-vercel-protection-bypass=<DEDICATED_STRIPE_BYPASS_SECRET>`. Treat the full endpoint URL as secret, keep it out of source and client builds, and revoke the dedicated bypass after the test campaign.
+2. If the Vercel plan supports it, create a deployment-protection exception or a non-production custom origin that exposes only the required test surface.
+3. Otherwise, temporarily disable Preview protection only for the controlled test window, then restore it immediately afterward.
+
+Do not reuse or expose a general automation bypass in MetaTweak. The desktop client must receive an ordinary non-production API origin, never a protection secret.
+
 Never put a server-only value in a `NEXT_PUBLIC_` variable or in MetaTweak.
 
 ## 5. Smoke-test the deployed services

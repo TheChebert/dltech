@@ -21,6 +21,8 @@
 | Webhook delivery is secure and idempotent | Raw signature verification, claimed event IDs, row locking, and order-item-anchored fulfillment prevent forged or duplicate issuance. |
 | Commercial values require no app build | Prices, activation limits, grants, provider IDs, license type, and refresh interval are database configuration absent from the MetaTweak v1 contract. |
 
-Automated checks cover the policy state machine, time-limited and perpetual token behavior, signing, encryption, schema validation, types, linting, production build, browser routes, dependency audit, OpenAPI parsing, and SQL parsing. A real Stripe/Supabase lifecycle requires the operator-supplied Test Mode IDs and secrets in `stripe-test-setup.md`.
+Automated checks cover the policy state machine, time-limited and perpetual token behavior, signing, encryption, schema validation, types, linting, production build, browser routes, dependency audit, OpenAPI parsing, and SQL parsing.
+
+On 2026-09-03, the real non-production Supabase and deployed API lifecycle passed manual issuance, activation-limit enforcement, deactivation/replacement, live signed-certificate verification through SDK `1.0.0`, refresh-due/offline behavior, suspension, revocation, recovery, and deactivated-token denial. The remaining real-world commerce checks are Stripe Test Checkout, webhook fulfillment, and webhook replay. They require the operator-supplied Test Mode IDs and secrets in `stripe-test-setup.md`; no result is claimed until those values exist.
 
 Run `supabase/tests/commerce_entitlements.sql` against a migrated non-production database to exercise configuration, duplicate fulfillment, three activations, fourth-installation rejection, deactivation, and replacement activation in a transaction that rolls back.
