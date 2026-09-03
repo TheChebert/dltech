@@ -1,281 +1,349 @@
 openapi: 3.1.0
 info:
-  title: Driftline Tech Platform API
-  version: 1.0.0
-  description: Versioned public health, release discovery, and license lifecycle API.
+  title: Driftline Platform API
+  version: 1.2.0
+  description: Canonical product entitlement, licensing, checkout, health, and release API.
+  license:
+    name: Proprietary
+    url: https://driftlinetech.com/legal/terms
 servers:
-  - url: https://dltech-six.vercel.app/api/v1
+  - url: https://driftlinetech.com/api/v1
+security: []
 paths:
   /health:
     get:
       operationId: getHealth
-      summary: Check service health
+      summary: Check website and database health
       responses:
         "200":
-          description: Service is available.
+          description: Healthy.
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/Health"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
-  /products/{slug}/releases/latest:
+              schema: { $ref: "#/components/schemas/HealthResponse" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+  /products/{productId}/releases/latest:
     get:
       operationId: getLatestRelease
-      summary: Return the latest published release for a product
+      summary: Get the latest published product release
       parameters:
-        - name: slug
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: "#/components/parameters/ProductId"
+        - name: channel
+          in: query
+          schema: { type: string, enum: [stable, beta, alpha], default: stable }
       responses:
-        "200":
-          description: Latest published release metadata.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Release"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
-  /licenses/activate:
+        "200": { description: Latest release metadata. }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+  /entitlements/resolve:
     post:
-      operationId: activateLicense
-      summary: Activate a license for one installation
+      operationId: resolveFreeEntitlement
+      summary: Optionally resolve signed metadata for an active edition that does not require activation
+      description: Diagnostic/synchronization endpoint only. Product applications must provide their built-in Free baseline without calling this endpoint.
       requestBody:
         required: true
         content:
           application/json:
-            schema:
-              $ref: "#/components/schemas/ActivationRequest"
+            schema: { $ref: "#/components/schemas/FreeEntitlementRequest" }
       responses:
         "200":
-          description: License activated.
+          description: Signed free entitlement.
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/LicenseResponse"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "409":
-          $ref: "#/components/responses/Conflict"
-        "429":
-          $ref: "#/components/responses/RateLimited"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
-  /licenses/validate:
-    post:
-      operationId: validateLicense
-      summary: Validate an active installation
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ValidationRequest"
+              schema: { $ref: "#/components/schemas/EntitlementResponse" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+  /licensing/jwks:
+    get:
+      operationId: getLicensingJwks
+      summary: Get current public keys for diagnostics and key rotation
+      description: Successful activation and validation already return verificationKeys for local caching; startup must not fetch this endpoint on every launch.
       responses:
         "200":
-          description: Current license status.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/LicenseResponse"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "429":
-          $ref: "#/components/responses/RateLimited"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
-  /licenses/deactivate:
-    post:
-      operationId: deactivateLicense
-      summary: Deactivate one installation
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/DeactivationRequest"
-      responses:
-        "200":
-          description: Installation deactivated.
+          description: JSON Web Key Set.
           content:
             application/json:
               schema:
                 type: object
-                required: [ok]
+                required: [keys]
                 properties:
-                  ok:
-                    type: boolean
-                    const: true
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "429":
-          $ref: "#/components/responses/RateLimited"
-        "503":
-          $ref: "#/components/responses/ServiceUnavailable"
+                  keys:
+                    type: array
+                    items: { type: object, additionalProperties: true }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+  /licenses/activate:
+    post:
+      operationId: activateLicense
+      summary: Activate one installation and issue a signed entitlement with cacheable public keys
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ActivationRequest" }
+      responses:
+        "201":
+          description: Activated.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/EntitlementResponse"
+                  - type: object
+                    required: [activationToken]
+                    properties:
+                      activationToken: { type: string, minLength: 32 }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+  /licenses/validate:
+    post:
+      operationId: validateLicense
+      summary: Validate an active installation and refresh its signed entitlement and public keys
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ValidationRequest" }
+      responses:
+        "200":
+          description: Valid.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/EntitlementResponse"
+                  - type: object
+                    required: [valid, validatedAt]
+                    properties:
+                      valid: { type: boolean, const: true }
+                      validatedAt: { type: string, format: date-time }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+  /licenses/deactivate:
+    post:
+      operationId: deactivateLicense
+      summary: Release one active installation slot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/DeactivationRequest" }
+      responses:
+        "200":
+          description: Deactivated.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [deactivated, deactivatedAt]
+                properties:
+                  deactivated: { type: boolean, const: true }
+                  deactivatedAt: { type: string, format: date-time }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+  /checkout/sessions:
+    post:
+      operationId: createCheckoutSession
+      summary: Create a server-authoritative Stripe Checkout Session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [productId, editionId]
+              properties:
+                productId: { $ref: "#/components/schemas/StableId" }
+                editionId: { $ref: "#/components/schemas/StableId" }
+      responses:
+        "201":
+          description: Checkout created.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [checkoutUrl, orderId, accessToken]
+                properties:
+                  checkoutUrl: { type: string, format: uri }
+                  orderId: { type: string, format: uuid }
+                  accessToken: { type: string, minLength: 32 }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+  /checkout/status:
+    post:
+      operationId: getCheckoutFulfillmentStatus
+      summary: Read verified fulfillment with the private checkout receipt token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [orderId, accessToken]
+              properties:
+                orderId: { type: string, format: uuid }
+                accessToken: { type: string, minLength: 32 }
+      responses:
+        "200": { description: Current order/fulfillment state; licenseKey is present only after verified fulfillment. }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
 components:
+  parameters:
+    ProductId:
+      name: productId
+      in: path
+      required: true
+      schema: { $ref: "#/components/schemas/StableId" }
   schemas:
-    Health:
+    StableId:
+      type: string
+      pattern: "^[a-z0-9]+(?:[-_][a-z0-9]+)*$"
+      maxLength: 120
+    RequestProof:
       type: object
-      required: [status, service, version]
+      required: [productId, installationId, platform, nonce, timestamp]
       properties:
-        status:
-          type: string
-          const: ok
-        service:
-          type: string
-        version:
-          type: string
-    Release:
-      type: object
-      required: [product, version, publishedAt, platforms]
-      properties:
-        product:
-          type: string
-        version:
-          type: string
-        releaseNotes:
-          type: [string, "null"]
-        publishedAt:
-          type: string
-          format: date-time
-        platforms:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-    SignedRequest:
-      type: object
-      required: [timestamp, nonce]
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-        nonce:
-          type: string
-          minLength: 16
-          maxLength: 200
+        productId: { $ref: "#/components/schemas/StableId" }
+        installationId: { type: string, format: uuid }
+        platform: { type: string, minLength: 2, maxLength: 80 }
+        nonce: { type: string, format: uuid }
+        timestamp: { type: string, format: date-time }
     ActivationRequest:
       allOf:
-        - $ref: "#/components/schemas/SignedRequest"
+        - $ref: "#/components/schemas/RequestProof"
         - type: object
-          required: [licenseKey, productSlug, installationId]
+          required: [licenseKey, appVersion]
           properties:
-            licenseKey:
-              type: string
-              minLength: 12
-              maxLength: 200
-            productSlug:
-              type: string
-            installationId:
-              type: string
-              minLength: 8
-              maxLength: 500
-            deviceName:
-              type: string
-              maxLength: 120
+            licenseKey: { type: string, minLength: 24, maxLength: 200 }
+            appVersion: { type: string, minLength: 1, maxLength: 80 }
+            deviceName: { type: string, minLength: 1, maxLength: 160 }
     ValidationRequest:
       allOf:
-        - $ref: "#/components/schemas/SignedRequest"
+        - $ref: "#/components/schemas/RequestProof"
         - type: object
-          required: [licenseKey, productSlug, installationId, activationToken]
+          required: [activationToken, appVersion]
           properties:
-            licenseKey:
-              type: string
-            productSlug:
-              type: string
-            installationId:
-              type: string
-            activationToken:
-              type: string
+            activationToken: { type: string, minLength: 32, maxLength: 256 }
+            appVersion: { type: string, minLength: 1, maxLength: 80 }
     DeactivationRequest:
       allOf:
-        - $ref: "#/components/schemas/ValidationRequest"
-    LicenseResponse:
+        - $ref: "#/components/schemas/RequestProof"
+        - type: object
+          required: [activationToken]
+          properties:
+            activationToken: { type: string, minLength: 32, maxLength: 256 }
+            reason: { type: string, maxLength: 240 }
+    FreeEntitlementRequest:
       type: object
-      required: [valid, status]
+      required: [productId, editionId, appVersion]
       properties:
-        valid:
-          type: boolean
-        status:
-          type: string
-        activationToken:
-          type: string
-          description: Present only after successful activation.
-        expiresAt:
-          type: [string, "null"]
-          format: date-time
-    Error:
+        productId: { $ref: "#/components/schemas/StableId" }
+        editionId: { $ref: "#/components/schemas/StableId" }
+        appVersion: { type: string, minLength: 1, maxLength: 80 }
+    Entitlement:
+      type: object
+      required: [schema_version, iss, aud, sub, jti, iat, refresh_after, authorization, product_id, edition_id, license_type, activation_required, activation_limit, installation_id, activation_id, features, version_entitlement]
+      properties:
+        schema_version: { type: integer, const: 1 }
+        iss: { type: string }
+        aud: { type: string }
+        sub: { type: string }
+        jti: { type: string, format: uuid }
+        iat: { type: integer }
+        refresh_after: { type: integer, description: Advisory online-validation time; not a perpetual authorization expiry. }
+        exp: { type: integer, description: "Hard authorization expiry, present only for time-limited entitlements." }
+        authorization: { $ref: "#/components/schemas/EntitlementAuthorization" }
+        product_id: { $ref: "#/components/schemas/StableId" }
+        edition_id: { $ref: "#/components/schemas/StableId" }
+        license_type: { type: string, enum: [perpetual, subscription, trial, account] }
+        activation_required: { type: boolean }
+        activation_limit: { type: integer, minimum: 0 }
+        installation_id: { type: [string, "null"], format: uuid }
+        activation_id: { type: [string, "null"], format: uuid }
+        features:
+          type: array
+          items: { $ref: "#/components/schemas/StableId" }
+          uniqueItems: true
+        version_entitlement:
+          type: object
+          required: [policy, current_version]
+          properties:
+            policy: { type: string }
+            current_version: { type: [string, "null"] }
+    EntitlementResponse:
+      type: object
+      required: [entitlementToken, entitlement, verificationKeys]
+      properties:
+        entitlementToken: { type: string }
+        entitlement: { $ref: "#/components/schemas/Entitlement" }
+        verificationKeys: { $ref: "#/components/schemas/Jwks" }
+    EntitlementAuthorization:
+      oneOf:
+        - type: object
+          required: [kind, expires_at]
+          properties:
+            kind: { type: string, const: perpetual }
+            expires_at: { type: "null" }
+        - type: object
+          required: [kind, expires_at]
+          properties:
+            kind: { type: string, const: time_limited }
+            expires_at: { type: integer }
+    Jwks:
+      type: object
+      required: [keys]
+      properties:
+        keys:
+          type: array
+          minItems: 1
+          items: { type: object, additionalProperties: true }
+    HealthResponse:
+      type: object
+      required: [status, services, timestamp, responseTimeMs]
+      properties:
+        status: { type: string, enum: [ok, degraded] }
+        services: { type: object, additionalProperties: true }
+        timestamp: { type: string, format: date-time }
+        responseTimeMs: { type: integer, minimum: 0 }
+    ErrorResponse:
       type: object
       required: [error]
       properties:
-        error:
-          type: object
-          required: [code, message]
-          properties:
-            code:
-              type: string
-            message:
-              type: string
+        error: { type: string }
+        valid: { type: boolean }
   responses:
     BadRequest:
-      description: Request validation failed.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
+      description: Invalid request, timestamp, or nonce.
+      content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } }
     Unauthorized:
-      description: Credentials or activation token are invalid.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
+      description: Invalid license or activation proof.
+      content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } }
     Forbidden:
-      description: The license or entitlement does not permit the operation.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
+      description: Product, license, or entitlement is unavailable.
+      content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } }
     Conflict:
-      description: Activation limit or replay protection conflict.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
+      description: Activation limit, installation ownership, replay, or checkout state conflict.
+      content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } }
     RateLimited:
       description: Too many requests.
-      headers:
-        Retry-After:
-          schema:
-            type: integer
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
+      headers: { Retry-After: { schema: { type: string } } }
+      content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } }
     NotFound:
-      description: Resource not found.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
+      description: Requested resource was not found.
+      content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } }
     ServiceUnavailable:
-      description: Required server configuration or dependency is unavailable.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
+      description: Server configuration or dependency is unavailable.
+      content: { application/json: { schema: { $ref: "#/components/schemas/ErrorResponse" } } }

@@ -66,14 +66,14 @@ export default function Home() {
         <div className="hero-glow" aria-hidden="true" />
         <div className="page-shell relative grid min-h-[650px] items-center gap-10 py-20 lg:grid-cols-[.98fr_1.02fr] lg:pb-8 lg:pt-20">
           <div className="max-w-3xl">
-            <div className="eyebrow mb-7">Websites, applications, and connected systems</div>
+            <div className="eyebrow mb-7">La Crosse, Wisconsin | Websites, applications, and connected systems</div>
             <h1 className="text-balance text-5xl font-semibold leading-[1.02] tracking-[-0.055em] sm:text-6xl xl:text-[4.75rem]">
               Custom solutions.
               <span className="mt-1 block text-gradient">Connected technology.</span>
               <span className="mt-1 block">Real results.</span>
             </h1>
             <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
-              Driftline Tech designs and builds modern websites, custom applications, automation, and connected digital systems around real-world business needs.
+              Based in the La Crosse area, Driftline Tech designs and builds modern websites, custom applications, automation, and connected digital systems around real-world business needs.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Link href="/services" className={cn(buttonVariants({ size: "lg" }), "h-13 rounded-lg bg-blue-600 px-6 text-base text-white shadow-xl shadow-blue-950/40 hover:bg-blue-500")}>
@@ -182,6 +182,19 @@ export default function Home() {
               </article>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section data-surface="light" className="surface-light py-20 text-slate-950 sm:py-24">
+        <div className="page-shell grid items-center gap-10 lg:grid-cols-[1fr_auto]">
+          <div className="max-w-3xl">
+            <p className="section-kicker">La Crosse, Wisconsin technology partner</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">Local context for websites, software, automation, and technology decisions.</h2>
+            <p className="mt-4 text-base leading-7 text-slate-600">Driftline Tech serves businesses in La Crosse, Onalaska, Holmen, West Salem, and the surrounding Coulee Region, with remote collaboration available beyond the area.</p>
+          </div>
+          <Link href="/la-crosse-wi" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-12 rounded-lg border-slate-300 bg-white px-6 text-base text-slate-900 hover:bg-slate-100")}>
+            Explore local services <ArrowRight aria-hidden="true" />
+          </Link>
         </div>
       </section>
 

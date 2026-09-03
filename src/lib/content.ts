@@ -91,6 +91,22 @@ export const services: Service[] = [
 
 export const products: Product[] = [
   {
+    slug: "metatweak",
+    name: "MetaTweak",
+    eyebrow: "Windows metadata utility",
+    shortDescription: "Inspect and edit file metadata with a focused Windows desktop workflow.",
+    description: "MetaTweak provides clear tools for reviewing and changing document metadata, timestamps, file attributes, and advanced metadata workflows. Free and Pro capabilities are controlled by Driftline platform entitlements.",
+    status: "available",
+    statusLabel: "Available",
+    version: null,
+    pricingLabel: "Free and Pro editions",
+    accent: "blue",
+    features: ["Focused metadata editing", "File properties and timestamps", "Safe backup controls", "Pro batch workflows"],
+    requirements: ["Supported Windows versions and release-specific requirements are published with each MetaTweak release."],
+    platforms: ["Windows"],
+    licenseModel: "Free edition and perpetual Pro license",
+  },
+  {
     slug: "ezebay-listing-manager",
     name: "EzeBay Listing Manager",
     eyebrow: "Marketplace workflow software",

@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 const unreleasedNames = /EzeBay Listing Manager|Easy File Editor|Viewsaic/;
 
-test("homepage presents services without unreleased products or named projects", async ({ page }) => {
+test("homepage presents services without unreleased products or named projects", async ({ page, isMobile }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Custom solutions");
   await expect(page.getByRole("link", { name: "Explore services" })).toBeVisible();
@@ -22,13 +22,15 @@ test("homepage presents services without unreleased products or named projects",
     /Driftline-Tech-Primary-Logo-White-and-Blue\.svg/,
   );
   await expect(page.locator("body")).not.toContainText(unreleasedNames);
-  await expect(page.getByRole("navigation", { name: "Primary navigation" }).getByRole("link", { name: "Software" })).toHaveCount(0);
+  const primarySoftwareLink = page.getByRole("navigation", { name: "Primary navigation" }).getByRole("link", { name: "Software" });
+  if (isMobile) await expect(primarySoftwareLink).toHaveCount(0);
+  else await expect(primarySoftwareLink).toBeVisible();
   await expect(page.getByRole("navigation", { name: "Primary navigation" }).getByRole("link", { name: "Work" })).toHaveCount(0);
 
   const surfacePattern = await page.locator("main > section[data-surface]").evaluateAll((sections) =>
     sections.map((section) => section.getAttribute("data-surface")),
   );
-  expect(surfacePattern).toEqual(["dark", "dark", "dark", "light", "dark", "light"]);
+  expect(surfacePattern).toEqual(["dark", "dark", "dark", "light", "dark", "light", "light"]);
   const deliverySection = page.locator("#how-we-deliver");
   await expect(deliverySection.getByRole("heading", { name: "Built around your business." })).toBeVisible();
   const deliveryStages = deliverySection.getByRole("list", { name: "Delivery stages" });
@@ -43,7 +45,7 @@ test("homepage uses varied softened surfaces without a decorative hero icon", as
   await page.goto("/");
 
   const eyebrow = page.locator(".eyebrow");
-  await expect(eyebrow).toHaveText("Websites, applications, and connected systems");
+  await expect(eyebrow).toHaveText("La Crosse, Wisconsin | Websites, applications, and connected systems");
   await expect(eyebrow.locator("svg")).toHaveCount(0);
 
   const surfaceColors = await page.locator("main > section[data-surface]").evaluateAll((sections) =>
@@ -52,31 +54,40 @@ test("homepage uses varied softened surfaces without a decorative hero icon", as
   expect(surfaceColors[1]).not.toBe(surfaceColors[2]);
   expect(surfaceColors).not.toContain("rgb(255, 255, 255)");
 
-  for (const index of [3, 5]) {
+  for (const index of [3, 5, 6]) {
     const channels = surfaceColors[index].match(/\d+/g)?.map(Number) ?? [];
     expect(Math.max(...channels.slice(0, 3))).toBeLessThanOrEqual(244);
   }
 });
-test("custom software remains a service while legacy product and work routes stay hidden", async ({ page }) => {
+test("custom software remains a service while MetaTweak is the only public software product", async ({ page }) => {
   await page.goto("/services/custom-software");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Software that fits");
 
-  await page.goto("/software/viewsaic");
-  await expect(page).toHaveURL(/\/services\/custom-software$/);
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Software that fits");
+  await page.goto("/software");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Focused software");
+  await expect(page.getByRole("heading", { name: "MetaTweak" })).toBeVisible();
   await expect(page.locator("body")).not.toContainText(unreleasedNames);
+
+  await page.goto("/software/metatweak");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("MetaTweak");
+
+  const hiddenProductResponse = await page.goto("/software/viewsaic");
+  expect(hiddenProductResponse?.status()).toBe(404);
 
   await page.goto("/work");
   await expect(page).toHaveURL(/\/services$/);
 });
 
-test("sitemap excludes hidden software, portfolio, and licensing routes", async ({ request }) => {
+test("sitemap includes only released software routes", async ({ request }) => {
   const response = await request.get("/sitemap.xml");
   expect(response.ok()).toBe(true);
   const sitemap = await response.text();
-  expect(sitemap).not.toContain("/software");
-  expect(sitemap).not.toContain("/work");
-  expect(sitemap).not.toContain("/legal/software-license");
+  const paths = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => new URL(match[1]).pathname);
+  expect(paths).toContain("/software");
+  expect(paths).toContain("/software/metatweak");
+  expect(paths).not.toContain("/software/viewsaic");
+  expect(paths).not.toContain("/work");
+  expect(paths).not.toContain("/legal/software-license");
 });
 
 test("manifest uses the official dark app icon", async ({ request }) => {
@@ -122,7 +133,7 @@ test("mobile navigation exposes only the current public routes", async ({ page, 
   await expect(navigation.getByRole("link", { name: "Services", exact: true })).toBeVisible();
   await expect(navigation.getByRole("link", { name: "About", exact: true })).toBeVisible();
   await expect(navigation.getByRole("link", { name: "Resources", exact: true })).toBeVisible();
-  await expect(navigation.getByRole("link", { name: "Software", exact: true })).toHaveCount(0);
+  await expect(navigation.getByRole("link", { name: "Software", exact: true })).toBeVisible();
   await expect(navigation.getByRole("link", { name: "Work", exact: true })).toHaveCount(0);
 });
 
@@ -216,5 +227,5 @@ test("site identifies the La Crosse area as Driftline Tech's home base", async (
   await expect(page.getByText("La Crosse, WI area · Remote-first", { exact: true })).toBeVisible();
 
   await page.goto("/");
-  await expect(page.locator("footer").getByText("La Crosse, WI area", { exact: true })).toBeVisible();
+  await expect(page.locator("footer").getByText("Based in the La Crosse, WI area", { exact: true })).toBeVisible();
 });

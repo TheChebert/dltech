@@ -20,7 +20,7 @@ export function SignInForm() {
       const redirectTo = window.location.origin + "/auth/callback?next=/account/dashboard";
       const { error } = await supabase.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: redirectTo, shouldCreateUser: true },
+        options: { emailRedirectTo: redirectTo, shouldCreateUser: false },
       });
       if (error) throw error;
       setState("sent");

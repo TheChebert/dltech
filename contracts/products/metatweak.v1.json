@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "contract_version": 1,
+  "product_id": "metatweak",
+  "licensing_api_version": "v1",
+  "edition_ids": ["free", "pro"],
+  "feature_ids": [
+    "document_metadata",
+    "advanced_metadata",
+    "all_file_types",
+    "file_attributes",
+    "datetime_editing",
+    "backup_controls",
+    "backup_auto_cleanup",
+    "batch_editing",
+    "presets",
+    "advanced_operations",
+    "explorer_integration"
+  ],
+  "required_client_state": {
+    "installation_id": "Persist a random UUID generated once per installed application instance.",
+    "activation_token": "Persist only after successful Pro activation; use for validate and deactivate.",
+    "entitlement_token": "Cache only after successful paid activation or validation; absence always falls back to the application's built-in Free baseline.",
+    "verification_keys": "Cache the public verification keys returned with successful paid activation or validation."
+  },
+  "endpoints": {
+    "resolve_free": "/api/v1/entitlements/resolve",
+    "activate": "/api/v1/licenses/activate",
+    "validate": "/api/v1/licenses/validate",
+    "deactivate": "/api/v1/licenses/deactivate",
+    "jwks": "/api/v1/licensing/jwks"
+  },
+  "optional_endpoints": ["resolve_free", "jwks"],
+  "local_first_policy": {
+    "free_baseline": "Built into MetaTweak and available without network, token, account, key, activation, or verification keys.",
+    "paid_entitlements": "Signed platform entitlements add capabilities to the built-in Free baseline.",
+    "missing_or_invalid_paid_entitlement": "Use the built-in Free baseline."
+  },
+  "prohibited_client_dependencies": [
+    "database table names or queries",
+    "Supabase service or secret keys",
+    "Stripe Product or Price IDs",
+    "entitlement signing private keys",
+    "server license-key encryption keys",
+    "price, activation-limit, or feature-grant business rules"
+  ]
+}

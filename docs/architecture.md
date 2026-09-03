@@ -1,54 +1,50 @@
 # Architecture
 
-## System overview
+## System boundary
 
-Visitor or customer
-  -> Vercel edge and Next.js application
-      -> public server-rendered pages
-      -> Supabase Auth for identity
-      -> Supabase Postgres through Row Level Security
-      -> private Supabase Storage for future release binaries
-      -> versioned licensing APIs
-  -> GitHub Actions validates branch promotion
+```text
+Website / operator / desktop app
+          |
+          v
+Versioned Driftline API + reusable SDK
+          |
+          +-- public catalog and JWKS
+          +-- server-only commerce and fulfillment
+          +-- server-only licensing and signing
+          |
+          v
+Supabase Postgres + Auth + private release storage
+          ^
+          |
+Verified Stripe Checkout webhooks
+```
 
-The browser receives only the Supabase project URL and publishable key. Privileged writes and licensing operations run on the server with the server-only secret.
+The platform is generic by construction. Tables and routes describe products, editions, features, grants, prices, orders, payments, entitlements, licenses, and installations. MetaTweak contributes configuration rows and a versioned contract only.
 
-## Runtime boundaries
+## Trust boundaries
 
-### Public presentation
+- Public website: may read published catalog data and request checkout; it cannot choose price or fulfillment rules.
+- Desktop application: stores a random installation UUID, activation token, and signed entitlement. It has no Supabase or Stripe credential.
+- API server: owns secret-key database access, Stripe API use, license encryption, and entitlement signing.
+- Stripe webhook: is untrusted until raw-body signature verification succeeds.
+- Database functions: serialize activation-limit enforcement, webhook claims, and order fulfillment.
 
-Marketing pages are responsive, accessible, indexable, and server rendered. Product content is read from the public Supabase catalog with controlled local fallback so a temporary catalog outage does not break the public experience.
+## Data flow
 
-### Identity and authorization
+Checkout records an order and its exact edition/price selection before contacting Stripe. Fulfillment uses the stored order item as the expected state and compares it with the retrieved Stripe Session. The fulfillment function row-locks the order and uses order-item identity as the idempotency anchor.
 
-Supabase Auth owns identity. A profile record stores the customer, support, or admin role. Server route guards read the database role; email allowlists and client-only checks never grant privileges. Session middleware protects account and admin routes.
-
-### Data access
-
-Every application table has Row Level Security enabled. Visitors can read only explicitly published catalog and support content. Customers can access only their own records. Support and admin capabilities are granted through database helper functions and server checks.
-
-### Licensing
-
-Clients call versioned endpoints to activate, validate, and deactivate installations. Raw license keys, installation identifiers, activation tokens, and nonces are stored as hashes. Timestamp freshness, nonce uniqueness, and rate limits are checked before state changes.
-
-### Release distribution
-
-Release metadata is public only when a version is published. Binaries belong in the private product-releases bucket. A future download endpoint must validate entitlement and issue a short-lived signed URL.
-
-### Commerce
-
-Orders, order items, webhook events, entitlements, and licenses are modeled, but checkout remains inactive until a payment provider is selected. Webhooks must verify provider signatures and process event ids idempotently before granting entitlements.
+Activation hashes the app-generated installation UUID before storage. A license row lock serializes counting and activation. Validation relies on the scoped opaque activation token, not repeated transmission of the customer license key.
 
 ## Repository layout
 
-- src/app — pages, route handlers, metadata, and APIs
-- src/components — shared presentation and forms
-- src/lib — content, authorization, Supabase clients, and API security
-- supabase/migrations — schema, policies, functions, and seed data
-- tests/e2e — browser journeys
-- docs — architecture, platform, security, operations, and API contract
-- .github — continuous integration and dependency updates
+- `src/app` — pages and versioned route handlers
+- `src/lib/commerce` — generic checkout, payment, and order operations
+- `src/lib/licensing` — generic signing and license-key protection
+- `packages/licensing-sdk` — app-facing protocol and offline verification
+- `contracts/products` — versioned machine contracts
+- `supabase/migrations` — schema, RLS, transactional functions, and product configuration
+- `docs` — operating, API, setup, security, and integration guidance
 
-## Failure strategy
+## Failure model
 
-Public pages degrade to approved fallback catalog content. Sensitive operations fail closed when the database or server credential is unavailable. API responses omit stack traces, secrets, and raw sensitive identifiers.
+Sensitive paths fail closed on database, signature, mapping, key, or configuration failures. Checkout creation marks an unfinished order failed if Stripe Session creation fails. Webhook failures are recorded and can be retried. A checkout redirect never changes order, payment, entitlement, or license state.

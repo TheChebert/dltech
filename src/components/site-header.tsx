@@ -1,15 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, Phone, X } from "lucide-react";
 import { useState } from "react";
 
 import { BrandLogo } from "@/components/brand-logo";
 import { buttonVariants } from "@/components/ui/button";
+import { siteConfig } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 const navigation = [
   { label: "Services", href: "/services" },
+  { label: "Software", href: "/software" },
+  { label: "La Crosse, WI", href: "/la-crosse-wi" },
   { label: "About", href: "/about" },
   { label: "Resources", href: "/support" },
 ];
@@ -24,7 +27,7 @@ export function SiteHeader() {
           <BrandLogo onDark preload variant="compact" className="h-auto w-[200px] md:w-[230px]" />
         </Link>
 
-        <nav aria-label="Primary navigation" className="hidden items-center gap-8 lg:flex">
+        <nav aria-label="Primary navigation" className="hidden items-center gap-7 lg:flex">
           {navigation.map((item) => (
             <Link
               key={item.href}
@@ -37,6 +40,9 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
+          <a href={`tel:${siteConfig.phoneE164}`} className="inline-flex items-center gap-2 text-sm font-semibold text-sky-300 hover:text-sky-200">
+            <Phone className="size-4" aria-hidden="true" /> {siteConfig.phoneDisplay}
+          </a>
           <Link
             href="/contact"
             className={cn(buttonVariants({ size: "lg" }), "h-11 rounded-lg bg-blue-600 px-5 text-white shadow-lg shadow-blue-950/30 hover:bg-blue-500")}
@@ -64,7 +70,10 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
-            <div className="mt-3 border-t border-white/10 pt-4">
+            <div className="mt-3 grid gap-3 border-t border-white/10 pt-4 sm:grid-cols-2">
+              <a href={`tel:${siteConfig.phoneE164}`} onClick={() => setOpen(false)} className="flex h-11 items-center justify-center gap-2 rounded-lg border border-white/15 text-sm font-medium text-white">
+                <Phone className="size-4" aria-hidden="true" /> Call {siteConfig.phoneDisplay}
+              </a>
               <Link href="/contact" onClick={() => setOpen(false)} className="flex h-11 items-center justify-center rounded-lg bg-blue-600 text-sm font-medium text-white">
                 Get in touch
               </Link>

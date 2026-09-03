@@ -6,8 +6,8 @@ import { InnerHero } from "@/components/inner-hero";
 import { MarketingShell } from "@/components/marketing-shell";
 
 export const metadata: Metadata = {
-  title: "Contact",
-  description: "Start a project, ask about services, or request support from Driftline Tech.",
+  title: "Contact Driftline Tech in La Crosse, WI",
+  description: "Call 608-502-0949 or contact Driftline Tech for web design, custom software, automation, AI, consulting, or support in the La Crosse area.",
   alternates: { canonical: "/contact" },
 };
 

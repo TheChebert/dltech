@@ -8,6 +8,7 @@ import { InnerHero } from "@/components/inner-hero";
 import { MarketingShell } from "@/components/marketing-shell";
 import { buttonVariants } from "@/components/ui/button";
 import { getService, services } from "@/lib/content";
+import { absoluteUrl, serializeJsonLd, serviceAreas } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export function generateStaticParams() {
@@ -18,11 +19,16 @@ export async function generateMetadata({ params }: PageProps<"/services/[slug]">
   const { slug } = await params;
   const service = getService(slug);
   if (!service) return {};
+  const localDescription = `${service.shortDescription} Based in the La Crosse, Wisconsin area.`;
   return {
-    title: service.name,
-    description: service.shortDescription,
+    title: `${service.name} in La Crosse, WI`,
+    description: localDescription,
     alternates: { canonical: "/services/" + service.slug },
-    openGraph: { title: service.name + " | Driftline Tech", description: service.shortDescription, url: "/services/" + service.slug },
+    openGraph: {
+      title: `${service.name} in La Crosse, WI | Driftline Tech`,
+      description: localDescription,
+      url: "/services/" + service.slug,
+    },
   };
 }
 
@@ -31,8 +37,22 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
   const service = getService(slug);
   if (!service) notFound();
 
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": absoluteUrl(`/services/${service.slug}#service`),
+    name: service.name,
+    serviceType: service.name,
+    description: service.description,
+    url: absoluteUrl(`/services/${service.slug}`),
+    provider: { "@id": absoluteUrl("/#organization") },
+    areaServed: serviceAreas,
+    offers: service.capabilities.map((name) => ({ "@type": "Offer", name })),
+  };
+
   return (
     <MarketingShell>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(serviceJsonLd) }} />
       <InnerHero
         eyebrow={service.name}
         title={service.headline}

@@ -8,8 +8,8 @@ import { MarketingShell } from "@/components/marketing-shell";
 import { services } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: "Services",
-  description: "Web design, custom software, automation, AI solutions, support, and technology consulting from Driftline Tech.",
+  title: "Technology Services in La Crosse, WI",
+  description: "Web design, custom software, automation, AI solutions, support, and technology consulting for La Crosse-area businesses from Driftline Tech.",
   alternates: { canonical: "/services" },
 };
 
@@ -18,7 +18,7 @@ const icons = [MonitorSmartphone, Code2, Workflow, Bot, Headphones, Braces];
 export default function ServicesPage() {
   return (
     <MarketingShell>
-      <InnerHero eyebrow="Services" title="From first idea to dependable digital system." description="Driftline Tech combines product thinking, design, engineering, integration, and long-term care. Engage us for a focused project or for the connected work required to move a larger system forward." />
+      <InnerHero eyebrow="Services | La Crosse, Wisconsin" title="From first idea to dependable digital system." description="Based in the La Crosse area, Driftline Tech combines product thinking, design, engineering, integration, and long-term care. Engage us for a focused project or for the connected work required to move a larger system forward." />
       <section className="surface-light py-20 sm:py-24">
         <div className="page-shell grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {services.map((service, index) => {

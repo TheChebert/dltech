@@ -1,51 +1,54 @@
-# Platform behavior
+# Driftline platform behavior
 
-## Authentication
+## Canonical ownership
 
-Sign-in uses Supabase passwordless email links. The callback exchanges the authorization code for a secure session and sends the user to the account dashboard. The first login creates a customer profile through a database trigger.
+Driftline owns product identity, editions, feature definitions, paid edition grants, prices, provider mappings, customers, orders, payments, entitlements, licenses, installations, activations, releases, and audit history. Product applications consume the versioned API and `@driftline/licensing-sdk`; they never query platform tables or Stripe.
 
-## Customer account
+MetaTweak is the first configured product. Its stable ID is `metatweak`. Free and Pro are ordinary platform editions, not MetaTweak-specific code paths. Current price, activation allowance, license type, feature grants, Stripe mappings, and refresh interval are rows in central configuration, not values in the MetaTweak v1 contract.
 
-The account dashboard is the authenticated foundation for orders, entitlements, license management, downloads, and support history. Queries are scoped to the signed-in user and protected again by Row Level Security.
+## Commerce lifecycle
 
-## Administration
+1. The website sends only stable product and edition IDs.
+2. The server loads the active platform-owned price and Stripe Test Price mapping.
+3. The server creates a pending order and Stripe Checkout Session.
+4. Stripe redirects the browser for customer experience only; the redirect grants nothing.
+5. `/api/v1/webhooks/stripe` verifies the raw payload with the Stripe signature and endpoint secret.
+6. The handler retrieves the Checkout Session with line items and verifies mode, payment state, environment, order reference, currency, amount, quantity, and configured Price ID.
+7. A database function transactionally reconciles the customer, successful payment, entitlement, and license.
+8. The browser retrieves the issued license only with the high-entropy order access token created before checkout.
 
-The admin route requires the admin role stored in the profile table. Support and admin interfaces can expand without weakening this boundary. Role changes should be audited through a trusted administrative workflow.
+Webhook event IDs are claimed with a row lock. Repeated or concurrent delivery cannot create a second entitlement or license. Failed events can be retried, and abandoned processing claims become reclaimable after five minutes.
 
-## Product catalog and releases
+## Licensing lifecycle
 
-Products have lifecycle status, features, supported platforms, versions, downloads, and prices. Public pages show only published records. Seeded products are labeled planned and are not presented as purchases.
+- Built-in Free: applications start in their local Free baseline. No platform call, account, key, activation, token, internet, or JWKS is required. `/api/v1/entitlements/resolve` is optional diagnostics/synchronization and never authorizes the baseline.
+- Activate: submit product ID, license key, persisted random installation UUID, platform, app version, nonce, and timestamp. The server hashes the installation UUID, atomically enforces the configured activation limit, and returns an opaque activation token, signed entitlement, and public verification keys to cache together.
+- Validate: submit the activation token instead of the license key. The server checks current license, entitlement, installation, and product state, then returns refreshed signed material and public keys.
+- Deactivate: submit the activation token and installation UUID while online. The slot is released immediately; a replacement installation can activate.
+- Offline: verify the compact Ed25519 token using the cached keys. Check signature, schema version, audience/product, installation binding, authorization kind, and feature IDs.
 
-Release files belong in the private product-releases bucket. A production download workflow must verify an active entitlement, log the request, and return a short-lived signed URL.
+## Perpetual offline policy
 
-## Licensing API
+Perpetual activation issues an installation-bound signed durable authorization certificate. It has no hard local `exp`. The centrally configured `refresh_after` is freshness metadata, initially 30 days for MetaTweak Pro, not an authorization deadline.
 
-Version one exposes:
+At or after `refresh_after`, keep perpetual paid capabilities enabled and attempt validation opportunistically. Timeout, DNS/network failure, 429, and 5xx responses preserve authorization and schedule bounded retries. A prolonged licensing-service outage therefore leaves a cryptographically valid perpetual installation authorized. A definitive successful server response reporting revocation, suspension, refund/invalid entitlement, or invalid/deactivated activation removes paid authorization. This permits eventual revocation without turning a perpetual purchase into a subscription.
 
-- GET /api/v1/health
-- GET /api/v1/products/{slug}/releases/latest
-- POST /api/v1/licenses/activate
-- POST /api/v1/licenses/validate
-- POST /api/v1/licenses/deactivate
+Trials and subscriptions are different: their signed certificates contain an authoritative end and `exp`, and lose paid access locally when that time passes.
 
-Activation and validation enforce license status, entitlement state, product match, activation limit, timestamp freshness, nonce uniqueness, and rate limits.
+## Key material
 
-## Contact and support
+License lookups use SHA-256 hashes. The original key is retained only as AES-256-GCM ciphertext so verified checkout and future customer-portal delivery can recover it. The encryption key never leaves the server. Offline entitlements use an Ed25519 private key on the server; only public JWKs are returned and published.
 
-The contact form validates fields, records consent, includes a honeypot, and rate limits submissions. The server performs database writes so the public browser receives no table write permission. Support article and ticket tables are ready for a future authenticated interface.
+## Authentication and administration
 
-## Commerce integration contract
+Supabase sign-in is invite-only. Browser clients receive only the project URL and publishable key. Row Level Security remains enabled on every application table. The manual issuance endpoint requires a separate server-only admin API key and should be exposed only to trusted operators.
 
-Before checkout is enabled:
+## Canonical resources
 
-1. Select the payment provider and approve prices, taxes, refunds, and subscription rules.
-2. Create checkout sessions only on the server.
-3. Verify signed webhooks against the raw request body.
-4. store the provider event id and reject duplicate processing.
-5. Grant or revoke entitlements transactionally.
-6. Generate license keys once, store only a hash, and deliver the raw key through an authenticated channel.
-7. Add provider sandbox tests and operational alerts.
-
-## Content guidance
-
-Metrics, testimonials, customer logos, and portfolio examples require approved evidence. Current work cards are explicitly illustrative concepts. Legal pages are operational drafts requiring counsel approval.
+- Licensing protocol: `docs/licensing-protocol.md`
+- Machine contract: `contracts/products/metatweak.v1.json`
+- Client SDK: `packages/licensing-sdk`
+- HTTP contract: `docs/openapi.yaml`
+- Stripe setup and lifecycle checklist: `docs/stripe-test-setup.md`
+- MetaTweak handoff: `docs/metatweak-integration.md`
+- Validation matrix: `docs/validation-matrix.md`

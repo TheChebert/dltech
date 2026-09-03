@@ -1,54 +1,53 @@
 # Operations
 
-## Environments
+## Required environment
 
-Local development uses .env.local. Vercel preview and production values live in project environment settings. The Supabase organization currently has one project; it supports initial staging validation, but separate projects are recommended before real production customer, payment, or license data is accepted.
+Public configuration:
 
-Required variables:
+- `NEXT_PUBLIC_SITE_URL`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 
-- NEXT_PUBLIC_SUPABASE_URL
-- NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-- SUPABASE_SECRET_KEY
-- NEXT_PUBLIC_SITE_URL for the canonical production origin
+Server-only configuration:
 
-## Branch and release flow
+- `SUPABASE_SECRET_KEY`
+- `STRIPE_ENVIRONMENT` (`test` for this phase)
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+- `DRIFTLINE_ENTITLEMENT_PRIVATE_KEY`
+- `DRIFTLINE_ENTITLEMENT_KEY_ID`
+- `DRIFTLINE_ENTITLEMENT_ISSUER`
+- `DRIFTLINE_LICENSE_KEY_ENCRYPTION_KEY`
+- `DRIFTLINE_ADMIN_API_KEY`
 
-1. Develop on a short-lived branch based on dev.
-2. Open a pull request to dev and pass every check.
-3. Promote dev to staging through a pull request.
-4. Verify the Vercel preview with automated browser tests and a manual content review.
-5. Promote staging to main through a pull request.
-6. Verify production health, key pages, headers, authentication, and database connectivity.
+Contact email configuration remains optional for the contact workflow. Never copy server-only values into variables beginning with `NEXT_PUBLIC_`.
 
-Protected branches should require Quality and End-to-end checks. Main and staging should require pull requests and prevent force pushes and deletion.
+## Database deployment
 
-## Database changes
+Apply migrations in filename order to a non-production Supabase project first. Migration `20260902010000_commerce_entitlements.sql` adds the generic commerce/entitlement model, transactional functions, RLS, and MetaTweak configuration. It intentionally leaves the external Stripe Product and Price IDs null; follow `stripe-test-setup.md` after applying it.
 
-Migrations in supabase/migrations are authoritative and ship with the application change. Apply them to a non-production project first. Favor additive changes. Backfills must be resumable. Destructive changes require a backup, explicit rollback plan, and maintenance window.
+The same migration stores `refresh_interval_days` as edition configuration. This value schedules validation; it is not a hard expiration for perpetual authorization.
 
-## Deployment verification
+## Key generation
 
-- Home, services, software, contact, account, sitemap, robots, and social image return successfully.
-- GET /api/v1/health reports ok.
-- Contact submissions work without exposing records.
-- Security headers are present.
-- Published products load from Supabase.
-- Authentication redirects use the deployed origin.
-- Browser checks pass against the deployed URL.
+Generate a dedicated Ed25519 key pair and a separate random 32-byte AES key in a trusted operator environment. Store the PKCS8 private key and AES key only in encrypted deployment secrets. Keep a secure backup and record the entitlement `kid`. The public key is derived at runtime and published through JWKS.
 
-## Rollback
+## Manual issuance test
 
-For an application regression, promote the latest known-good Vercel deployment. For a database regression, deploy a forward corrective migration; do not reverse a destructive change blindly. Restore from backup only when data integrity cannot be safely recovered.
+After the migration and keys are configured, a trusted operator can issue a zero-dollar test license without Stripe:
 
-## Incident response
+```http
+POST /api/v1/admin/licenses/issue
+Authorization: Bearer <DRIFTLINE_ADMIN_API_KEY>
+Content-Type: application/json
 
-1. Disable the affected endpoint, integration, or deployment.
-2. Preserve relevant logs without copying secrets.
-3. Rotate exposed credentials and invalidate compromised sessions or tokens.
-4. Repair and verify in staging.
-5. Deploy through the normal gated path.
-6. Document impact, root cause, corrective action, and ownership.
+{"productId":"metatweak","editionId":"pro","customerEmail":"test@example.com"}
+```
 
-## Content and legal operations
+The response contains the test license once. Confirm activation on three unique installation UUIDs, rejection on the fourth, deactivation of one, and successful replacement activation.
 
-Product status, prices, legal text, work examples, and claims require an owner. Keep draft or planned items out of purchase paths until approval is recorded.
+## Monitoring and recovery
+
+Alert on failed or long-running `webhook_events`, paid orders without entitlements, licenses without active entitlements, and unexpected activation spikes. Retry failed Stripe events from the Stripe dashboard after correcting configuration. The claim function permits a failed event or a processing claim older than five minutes to run again.
+
+Application rollbacks use the previous known-good deployment. Database issues should use a forward corrective migration. Do not reverse destructive schema changes blindly.

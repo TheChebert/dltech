@@ -1,49 +1,36 @@
 # Security model
 
-## Trust boundaries
-
-- Public browsers are untrusted and hold only publishable configuration.
-- Authenticated browsers cannot authorize themselves; server guards and Row Level Security decide access.
-- The Supabase server secret is available only to server route handlers and deployment secrets.
-- License clients are untrusted. Keys, installation ids, nonces, timestamps, and tokens are validated.
-- Payment events are untrusted until their provider signatures are verified.
-
 ## Implemented controls
 
-- Row Level Security on every application table
-- Least-privilege anonymous and authenticated grants
-- Server-side admin authorization from database roles
-- Private release storage
-- SHA-256 hashing for license keys and device identifiers
-- Single-use hashed nonces and timestamp freshness checks
-- Database-backed rate limits
-- Honeypot and rate limits on contact submissions
-- Idempotency storage for future webhook events
-- Structured API errors without stack traces
-- Content Security Policy, HSTS, frame blocking, MIME sniff protection, restrictive permissions, and strict referrer policy
-- Dependency audit and automated release gates
+- Row Level Security and least-privilege grants on every application table
+- Server-only Supabase secret, Stripe secret, webhook secret, Ed25519 private key, AES key, and admin API key
+- Raw-body Stripe signature verification before event parsing or processing
+- Test/live environment matching and configured Stripe Price verification
+- Database-backed event idempotency with payload-hash conflict detection and stale-claim recovery
+- Transactional customer/payment/entitlement/license fulfillment
+- SHA-256 license and installation lookup hashes
+- AES-256-GCM authenticated encryption for recoverable license delivery
+- Ed25519 signed offline entitlements with a public JWKS endpoint
+- Opaque hashed activation tokens; validation does not resend the license key
+- Atomic activation-limit enforcement under a license row lock
+- Timestamp freshness, nonce replay protection, and route rate limits
+- High-entropy, hashed checkout receipt tokens for license display
+- Structured errors and logs that omit raw secrets and license keys
+- Invite-only authentication, role checks, private release storage, security headers, and dependency gates
 
-## Secret handling
+## Client prohibitions
 
-The local environment file is ignored by Git. Vercel and GitHub receive credentials through encrypted environment stores. Never place the server secret in browser code, screenshots, tickets, documentation, or logs. Rotate any credential that may have been disclosed.
+Desktop and public client code must never contain Supabase secret/service keys, Stripe secret or webhook keys, the entitlement private key, the license encryption key, the admin API key, database queries, provider IDs, prices, activation limits, or edition feature maps. The public Supabase publishable key may be used only where RLS explicitly permits public reads.
 
-## Operational controls
+## Key rotation
 
-- Create separate Supabase projects for development, staging, and production before accepting real customer or payment data.
-- Restrict production secret access to the minimum operators.
-- Enable platform audit visibility and alerts.
-- Back up the production database and test restoration.
-- Review rate-limit thresholds using real traffic.
-- Add durable delivery and alerting for contact messages and webhook retries.
-- Run dependency updates through pull requests and tests.
+Entitlement key rotation requires a new `kid` and continued publication of every public key needed to verify active durable certificates. Because perpetual certificates do not hard-expire, retire an old verification key only through an explicit certificate migration/reissuance policy, never merely when `refresh_after` passes. License encryption-key rotation requires decrypt/re-encrypt migration before the previous key is removed. Stripe and Supabase secrets should be rotated using their provider controls and deployment secret store.
 
-## Pre-launch security checklist
+## Remaining production controls
 
-- Obtain legal approval for privacy, terms, and license documents.
-- Add the approved dark logo and final icon assets.
-- Configure a verified sending domain and transactional email provider.
-- Select the payment provider and complete signed, idempotent webhook tests.
-- Test authorization with customer, support, and admin accounts.
-- Run a dependency audit, secret scan, and external security assessment.
-- Verify backups, rollback, incident ownership, and escalation.
-- Confirm all public claims, pricing, and examples have approval.
+- Restrict the manual issuance endpoint at the network edge and rotate its API key regularly.
+- Add transactional email delivery and a customer portal before live customer sales.
+- Configure durable alerts for repeated failed webhook events and incomplete fulfillment.
+- Use separate Supabase and Stripe environments for staging and production.
+- Obtain legal approval for privacy, terms, refunds, and the end-user license.
+- Run authorization tests with customer, support, and admin identities plus an external security assessment.
