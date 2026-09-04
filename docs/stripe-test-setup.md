@@ -104,3 +104,18 @@ Never put a server-only value in a `NEXT_PUBLIC_` variable or in MetaTweak.
 6. Confirm that an offline installation retains its previously valid perpetual authorization until it reconnects and receives that definitive denial.
 
 The environment is ready for wider non-production testing only after every step above passes. Before any live rollout, create separate live Product/Price mappings and webhook secrets, set `STRIPE_ENVIRONMENT=live`, use only live server secrets, and repeat the full lifecycle in a production-like environment.
+
+## Completed non-production evidence
+
+The first complete lifecycle passed on 2026-09-03/04 against Supabase project `kxamksngwlircmycenjb`, Vercel branch `codex/licensing-v1-nonprod`, and Stripe Test Mode with `livemode = false`.
+
+- Stripe Product: `prod_VCAbVzhPB1q70w`
+- Stripe one-time USD 14.99 Price: `price_1UBmH2LHkkWhGOlpgiUSCTHh`
+- Stripe webhook endpoint: `we_1UBmRQLHkkWhGOlp1rIfoEZg`
+- Paid order: `22e99fdd-1b0d-41ed-bdf9-07d225630a58`
+- Succeeded payment: `b00d9778-6ae9-4204-b38f-a82f2a578b7f`
+- Active perpetual entitlement: `d80a3a62-a315-4d52-aafd-44ba7f27fcbf`
+- Active license with three centrally configured activation slots: `59593dd0-4bbf-43ff-84c8-d8c584acd384`
+- Processed, replay-safe Stripe event: `evt_1UBmkmLHkkWhGOlpMmSiL4w0`
+
+No secret, customer information, license key, activation token, entitlement token, or Vercel protection-bypass value is recorded here. The test webhook currently uses the explicitly approved existing Preview automation bypass because this Vercel project exposes no separate Stripe-only bypass through the configured CLI. Before widening access or sharing this environment, replace that temporary route with a dedicated non-production webhook access mechanism and update the Stripe endpoint atomically.
