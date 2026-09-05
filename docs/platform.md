@@ -2,9 +2,9 @@
 
 ## Canonical ownership
 
-Driftline owns product identity, editions, feature definitions, paid edition grants, prices, provider mappings, customers, orders, payments, entitlements, licenses, installations, activations, releases, and audit history. Product applications consume the versioned API and `@driftline/licensing-sdk`; they never query platform tables or Stripe.
+Driftline owns product identity, editions, feature definitions, paid edition grants, prices, provider mappings, customers, orders, payments, entitlements, licenses, installations, activations, releases, and audit history. Product applications consume the versioned API and a first-party SDK (`@driftline/licensing-sdk` for TypeScript or `Driftline.Licensing` for .NET 8); they never query platform tables or Stripe.
 
-MetaTweak is the first configured product. Its stable ID is `metatweak`. Free and Pro are ordinary platform editions, not MetaTweak-specific code paths. Current price, activation allowance, license type, feature grants, Stripe mappings, and refresh interval are rows in central configuration, not values in the MetaTweak v1 contract.
+MetaTweak is the first configured product. Its stable ID is `metatweak`. Free and Pro are ordinary platform editions, not MetaTweak-specific code paths. Current price, activation allowance, license type, feature grants, Stripe mappings, and refresh interval are rows in central configuration, not values in the MetaTweak v2 contract.
 
 ## Commerce lifecycle
 
@@ -25,7 +25,7 @@ Webhook event IDs are claimed with a row lock. Repeated or concurrent delivery c
 - Activate: submit product ID, license key, persisted random installation UUID, platform, app version, nonce, and timestamp. The server hashes the installation UUID, atomically enforces the configured activation limit, and returns an opaque activation token, signed entitlement, and public verification keys to cache together.
 - Validate: submit the activation token instead of the license key. The server checks current license, entitlement, installation, and product state, then returns refreshed signed material and public keys.
 - Deactivate: submit the activation token and installation UUID while online. The slot is released immediately; a replacement installation can activate.
-- Offline: verify the compact Ed25519 token using the cached keys. Check signature, schema version, audience/product, installation binding, authorization kind, and feature IDs.
+- Offline: verify the compact Ed25519 token using cached keys through a first-party SDK. Check signature and key structure, exact issuer, schema version, audience/product, installation binding, authorization kind, and feature IDs.
 
 ## Perpetual offline policy
 
@@ -46,8 +46,11 @@ Supabase sign-in is invite-only. Browser clients receive only the project URL an
 ## Canonical resources
 
 - Licensing protocol: `docs/licensing-protocol.md`
-- Machine contract: `contracts/products/metatweak.v1.json`
-- Client SDK: `packages/licensing-sdk`
+- Current MetaTweak contract: `contracts/products/metatweak.v2.json` (v1 retained for history)
+- TypeScript SDK: `packages/licensing-sdk` 1.1.x
+- .NET SDK: `packages/Driftline.Licensing` 1.0.x
+- Shared parity vectors: `contracts/licensing/protocol-v1.test-vectors.json`
+- Versioned handoff bundle: `contracts/integration-bundles/metatweak.json`
 - HTTP contract: `docs/openapi.yaml`
 - Stripe setup and lifecycle checklist: `docs/stripe-test-setup.md`
 - MetaTweak handoff: `docs/metatweak-integration.md`

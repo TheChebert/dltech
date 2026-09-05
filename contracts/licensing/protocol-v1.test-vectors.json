@@ -1,0 +1,170 @@
+{
+  "fixture_version": 1,
+  "protocol": {
+    "api_version": "v1",
+    "specification_version": "1.1.0",
+    "token_schema_version": 1
+  },
+  "generated": "Deterministic test-only Ed25519 key material. No production signing material is retained or distributed.",
+  "evaluation": {
+    "issuer": "https://licensing-nonprod.driftlinetech.com",
+    "product_id": "metatweak",
+    "installation_id": "8b66a270-61da-4e51-9f0c-2f65bde2337e",
+    "now": 2000
+  },
+  "jwks": {
+    "keys": [
+      {
+        "crv": "Ed25519",
+        "x": "CR36_mkj8cWXdL63WGnnP5HQkw_rz0ALNken1w03LEE",
+        "kty": "OKP",
+        "alg": "EdDSA",
+        "use": "sig",
+        "kid": "shared-parity-vector"
+      }
+    ]
+  },
+  "entitlement_cases": [
+    {
+      "name": "valid_perpetual",
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InNoYXJlZC1wYXJpdHktdmVjdG9yIiwidHlwIjoiRExULUVOVElUTEVNRU5UK2p3dCIsInYiOjF9.eyJzY2hlbWFfdmVyc2lvbiI6MSwiaXNzIjoiaHR0cHM6Ly9saWNlbnNpbmctbm9ucHJvZC5kcmlmdGxpbmV0ZWNoLmNvbSIsImF1ZCI6Im1ldGF0d2VhayIsInN1YiI6InNoYXJlZC1saWNlbnNlLWlkIiwianRpIjoiOGQyYmM0MmUtOWQwZi00ZTc4LTkxOTItOTNlNjNmNDNkMTdjIiwiaWF0IjoxMDAwLCJyZWZyZXNoX2FmdGVyIjozMDAwLCJhdXRob3JpemF0aW9uIjp7ImtpbmQiOiJwZXJwZXR1YWwiLCJleHBpcmVzX2F0IjpudWxsfSwicHJvZHVjdF9pZCI6Im1ldGF0d2VhayIsImVkaXRpb25faWQiOiJwcm8iLCJsaWNlbnNlX3R5cGUiOiJwZXJwZXR1YWwiLCJhY3RpdmF0aW9uX3JlcXVpcmVkIjp0cnVlLCJhY3RpdmF0aW9uX2xpbWl0IjozLCJpbnN0YWxsYXRpb25faWQiOiI4YjY2YTI3MC02MWRhLTRlNTEtOWYwYy0yZjY1YmRlMjMzN2UiLCJhY3RpdmF0aW9uX2lkIjoiYmI2NmEyNzAtNjFkYS00ZTUxLTlmMGMtMmY2NWJkZTIzMzdlIiwiZmVhdHVyZXMiOlsiYWR2YW5jZWRfbWV0YWRhdGEiLCJiYXRjaF9lZGl0aW5nIiwicHJlc2V0cyJdLCJ2ZXJzaW9uX2VudGl0bGVtZW50Ijp7InBvbGljeSI6ImFsbF92ZXJzaW9ucyIsImN1cnJlbnRfdmVyc2lvbiI6bnVsbH19.o8ZMVRwfcvBUKMn551TDiVHvCTERn_Y0DMhRBGulQ_1Ch79sWiORYATpttP4uWCIr3BGiQ-T9cVC-IZ5EXXlDg",
+      "expected_state": "valid_perpetual",
+      "authorized": true
+    },
+    {
+      "name": "refresh_due_perpetual",
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InNoYXJlZC1wYXJpdHktdmVjdG9yIiwidHlwIjoiRExULUVOVElUTEVNRU5UK2p3dCIsInYiOjF9.eyJzY2hlbWFfdmVyc2lvbiI6MSwiaXNzIjoiaHR0cHM6Ly9saWNlbnNpbmctbm9ucHJvZC5kcmlmdGxpbmV0ZWNoLmNvbSIsImF1ZCI6Im1ldGF0d2VhayIsInN1YiI6InNoYXJlZC1saWNlbnNlLWlkIiwianRpIjoiOGQyYmM0MmUtOWQwZi00ZTc4LTkxOTItOTNlNjNmNDNkMTdjIiwiaWF0IjoxMDAwLCJyZWZyZXNoX2FmdGVyIjoxNTAwLCJhdXRob3JpemF0aW9uIjp7ImtpbmQiOiJwZXJwZXR1YWwiLCJleHBpcmVzX2F0IjpudWxsfSwicHJvZHVjdF9pZCI6Im1ldGF0d2VhayIsImVkaXRpb25faWQiOiJwcm8iLCJsaWNlbnNlX3R5cGUiOiJwZXJwZXR1YWwiLCJhY3RpdmF0aW9uX3JlcXVpcmVkIjp0cnVlLCJhY3RpdmF0aW9uX2xpbWl0IjozLCJpbnN0YWxsYXRpb25faWQiOiI4YjY2YTI3MC02MWRhLTRlNTEtOWYwYy0yZjY1YmRlMjMzN2UiLCJhY3RpdmF0aW9uX2lkIjoiYmI2NmEyNzAtNjFkYS00ZTUxLTlmMGMtMmY2NWJkZTIzMzdlIiwiZmVhdHVyZXMiOlsiYWR2YW5jZWRfbWV0YWRhdGEiLCJiYXRjaF9lZGl0aW5nIiwicHJlc2V0cyJdLCJ2ZXJzaW9uX2VudGl0bGVtZW50Ijp7InBvbGljeSI6ImFsbF92ZXJzaW9ucyIsImN1cnJlbnRfdmVyc2lvbiI6bnVsbH19.-96WQGAbUVcOKXxgVjg5W9Y5FNyV-aNB0Nphk6XVSqM0BvOnNY8ER6QOyscm7mPkWR76YX7ccu449chW_qrRBg",
+      "expected_state": "refresh_due",
+      "authorized": true
+    },
+    {
+      "name": "valid_time_limited",
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InNoYXJlZC1wYXJpdHktdmVjdG9yIiwidHlwIjoiRExULUVOVElUTEVNRU5UK2p3dCIsInYiOjF9.eyJzY2hlbWFfdmVyc2lvbiI6MSwiaXNzIjoiaHR0cHM6Ly9saWNlbnNpbmctbm9ucHJvZC5kcmlmdGxpbmV0ZWNoLmNvbSIsImF1ZCI6Im1ldGF0d2VhayIsInN1YiI6InNoYXJlZC1saWNlbnNlLWlkIiwianRpIjoiOGQyYmM0MmUtOWQwZi00ZTc4LTkxOTItOTNlNjNmNDNkMTdjIiwiaWF0IjoxMDAwLCJyZWZyZXNoX2FmdGVyIjozMDAwLCJhdXRob3JpemF0aW9uIjp7ImtpbmQiOiJ0aW1lX2xpbWl0ZWQiLCJleHBpcmVzX2F0IjozMDAwfSwicHJvZHVjdF9pZCI6Im1ldGF0d2VhayIsImVkaXRpb25faWQiOiJwcm8iLCJsaWNlbnNlX3R5cGUiOiJzdWJzY3JpcHRpb24iLCJhY3RpdmF0aW9uX3JlcXVpcmVkIjp0cnVlLCJhY3RpdmF0aW9uX2xpbWl0IjozLCJpbnN0YWxsYXRpb25faWQiOiI4YjY2YTI3MC02MWRhLTRlNTEtOWYwYy0yZjY1YmRlMjMzN2UiLCJhY3RpdmF0aW9uX2lkIjoiYmI2NmEyNzAtNjFkYS00ZTUxLTlmMGMtMmY2NWJkZTIzMzdlIiwiZmVhdHVyZXMiOlsiYWR2YW5jZWRfbWV0YWRhdGEiLCJiYXRjaF9lZGl0aW5nIiwicHJlc2V0cyJdLCJ2ZXJzaW9uX2VudGl0bGVtZW50Ijp7InBvbGljeSI6ImFsbF92ZXJzaW9ucyIsImN1cnJlbnRfdmVyc2lvbiI6bnVsbH0sImV4cCI6MzAwMH0.Oe7uJhsud6AjUgbQZEpstV590A6eRDQF9V9TlFgCfRxBPo7aZKVg_CiP98CCi36vOF1LqMnwUqOEvfrGksi_Ag",
+      "expected_state": "valid_time_limited",
+      "authorized": true
+    },
+    {
+      "name": "expired_trial",
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InNoYXJlZC1wYXJpdHktdmVjdG9yIiwidHlwIjoiRExULUVOVElUTEVNRU5UK2p3dCIsInYiOjF9.eyJzY2hlbWFfdmVyc2lvbiI6MSwiaXNzIjoiaHR0cHM6Ly9saWNlbnNpbmctbm9ucHJvZC5kcmlmdGxpbmV0ZWNoLmNvbSIsImF1ZCI6Im1ldGF0d2VhayIsInN1YiI6InNoYXJlZC1saWNlbnNlLWlkIiwianRpIjoiOGQyYmM0MmUtOWQwZi00ZTc4LTkxOTItOTNlNjNmNDNkMTdjIiwiaWF0IjoxMDAwLCJyZWZyZXNoX2FmdGVyIjoxODAwLCJhdXRob3JpemF0aW9uIjp7ImtpbmQiOiJ0aW1lX2xpbWl0ZWQiLCJleHBpcmVzX2F0IjoxOTAwfSwicHJvZHVjdF9pZCI6Im1ldGF0d2VhayIsImVkaXRpb25faWQiOiJwcm8iLCJsaWNlbnNlX3R5cGUiOiJ0cmlhbCIsImFjdGl2YXRpb25fcmVxdWlyZWQiOnRydWUsImFjdGl2YXRpb25fbGltaXQiOjMsImluc3RhbGxhdGlvbl9pZCI6IjhiNjZhMjcwLTYxZGEtNGU1MS05ZjBjLTJmNjViZGUyMzM3ZSIsImFjdGl2YXRpb25faWQiOiJiYjY2YTI3MC02MWRhLTRlNTEtOWYwYy0yZjY1YmRlMjMzN2UiLCJmZWF0dXJlcyI6WyJhZHZhbmNlZF9tZXRhZGF0YSIsImJhdGNoX2VkaXRpbmciLCJwcmVzZXRzIl0sInZlcnNpb25fZW50aXRsZW1lbnQiOnsicG9saWN5IjoiYWxsX3ZlcnNpb25zIiwiY3VycmVudF92ZXJzaW9uIjpudWxsfSwiZXhwIjoxOTAwfQ.dACyCf-XHl-Oa-_QAiIFKHeP4WYyWwvQlGqwpLXJJ5unuF6t_zpwEEFmK0uuAGeidUgxb7GZJ6O5cXonWOi5Cg",
+      "expected_state": "expired_time_limited",
+      "authorized": false
+    },
+    {
+      "name": "expired_subscription",
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InNoYXJlZC1wYXJpdHktdmVjdG9yIiwidHlwIjoiRExULUVOVElUTEVNRU5UK2p3dCIsInYiOjF9.eyJzY2hlbWFfdmVyc2lvbiI6MSwiaXNzIjoiaHR0cHM6Ly9saWNlbnNpbmctbm9ucHJvZC5kcmlmdGxpbmV0ZWNoLmNvbSIsImF1ZCI6Im1ldGF0d2VhayIsInN1YiI6InNoYXJlZC1saWNlbnNlLWlkIiwianRpIjoiOGQyYmM0MmUtOWQwZi00ZTc4LTkxOTItOTNlNjNmNDNkMTdjIiwiaWF0IjoxMDAwLCJyZWZyZXNoX2FmdGVyIjozMDAwLCJhdXRob3JpemF0aW9uIjp7ImtpbmQiOiJ0aW1lX2xpbWl0ZWQiLCJleHBpcmVzX2F0IjoxOTAwfSwicHJvZHVjdF9pZCI6Im1ldGF0d2VhayIsImVkaXRpb25faWQiOiJwcm8iLCJsaWNlbnNlX3R5cGUiOiJzdWJzY3JpcHRpb24iLCJhY3RpdmF0aW9uX3JlcXVpcmVkIjp0cnVlLCJhY3RpdmF0aW9uX2xpbWl0IjozLCJpbnN0YWxsYXRpb25faWQiOiI4YjY2YTI3MC02MWRhLTRlNTEtOWYwYy0yZjY1YmRlMjMzN2UiLCJhY3RpdmF0aW9uX2lkIjoiYmI2NmEyNzAtNjFkYS00ZTUxLTlmMGMtMmY2NWJkZTIzMzdlIiwiZmVhdHVyZXMiOlsiYWR2YW5jZWRfbWV0YWRhdGEiLCJiYXRjaF9lZGl0aW5nIiwicHJlc2V0cyJdLCJ2ZXJzaW9uX2VudGl0bGVtZW50Ijp7InBvbGljeSI6ImFsbF92ZXJzaW9ucyIsImN1cnJlbnRfdmVyc2lvbiI6bnVsbH0sImV4cCI6MTkwMH0.CjGQVstocVpyxt32U2LqIeG3PbJmkcxk3MsJfieHGLiZttHfjS-cHyjFCogr34fzBDLsdvvwriqiHSSIC6ZTCw",
+      "expected_state": "expired_time_limited",
+      "authorized": false
+    },
+    {
+      "name": "tampered_token",
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InNoYXJlZC1wYXJpdHktdmVjdG9yIiwidHlwIjoiRExULUVOVElUTEVNRU5UK2p3dCIsInYiOjF9.eyJzY2hlbWFfdmVyc2lvbiI6MSwiaXNzIjoiaHR0cHM6Ly9saWNlbnNpbmctbm9ucHJvZC5kcmlmdGxpbmV0ZWNoLmNvbSIsImF1ZCI6Im1ldGF0d2VhayIsInN1YiI6InNoYXJlZC1saWNlbnNlLWlkIiwianRpIjoiOGQyYmM0MmUtOWQwZi00ZTc4LTkxOTItOTNlNjNmNDNkMTdjIiwiaWF0IjoxMDAwLCJyZWZyZXNoX2FmdGVyIjozMDAwLCJhdXRob3JpemF0aW9uIjp7ImtpbmQiOiJwZXJwZXR1YWwiLCJleHBpcmVzX2F0IjpudWxsfSwicHJvZHVjdF9pZCI6Im1ldGF0d2VhayIsImVkaXRpb25faWQiOiJwcm8iLCJsaWNlbnNlX3R5cGUiOiJwZXJwZXR1YWwiLCJhY3RpdmF0aW9uX3JlcXVpcmVkIjp0cnVlLCJhY3RpdmF0aW9uX2xpbWl0IjozLCJpbnN0YWxsYXRpb25faWQiOiI4YjY2YTI3MC02MWRhLTRlNTEtOWYwYy0yZjY1YmRlMjMzN2UiLCJhY3RpdmF0aW9uX2lkIjoiYmI2NmEyNzAtNjFkYS00ZTUxLTlmMGMtMmY2NWJkZTIzMzdlIiwiZmVhdHVyZXMiOlsiYWR2YW5jZWRfbWV0YWRhdGEiLCJiYXRjaF9lZGl0aW5nIiwicHJlc2V0cyJdLCJ2ZXJzaW9uX2VudGl0bGVtZW50Ijp7InBvbGljeSI6ImFsbF92ZXJzaW9ucyIsImN1cnJlbnRfdmVyc2lvbiI6bnVsbH1A.o8ZMVRwfcvBUKMn551TDiVHvCTERn_Y0DMhRBGulQ_1Ch79sWiORYATpttP4uWCIr3BGiQ-T9cVC-IZ5EXXlDg",
+      "expected_state": "invalid",
+      "authorized": false,
+      "expected_reason": "invalid_entitlement_signature"
+    },
+    {
+      "name": "invalid_signature",
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InNoYXJlZC1wYXJpdHktdmVjdG9yIiwidHlwIjoiRExULUVOVElUTEVNRU5UK2p3dCIsInYiOjF9.eyJzY2hlbWFfdmVyc2lvbiI6MSwiaXNzIjoiaHR0cHM6Ly9saWNlbnNpbmctbm9ucHJvZC5kcmlmdGxpbmV0ZWNoLmNvbSIsImF1ZCI6Im1ldGF0d2VhayIsInN1YiI6InNoYXJlZC1saWNlbnNlLWlkIiwianRpIjoiOGQyYmM0MmUtOWQwZi00ZTc4LTkxOTItOTNlNjNmNDNkMTdjIiwiaWF0IjoxMDAwLCJyZWZyZXNoX2FmdGVyIjozMDAwLCJhdXRob3JpemF0aW9uIjp7ImtpbmQiOiJwZXJwZXR1YWwiLCJleHBpcmVzX2F0IjpudWxsfSwicHJvZHVjdF9pZCI6Im1ldGF0d2VhayIsImVkaXRpb25faWQiOiJwcm8iLCJsaWNlbnNlX3R5cGUiOiJwZXJwZXR1YWwiLCJhY3RpdmF0aW9uX3JlcXVpcmVkIjp0cnVlLCJhY3RpdmF0aW9uX2xpbWl0IjozLCJpbnN0YWxsYXRpb25faWQiOiI4YjY2YTI3MC02MWRhLTRlNTEtOWYwYy0yZjY1YmRlMjMzN2UiLCJhY3RpdmF0aW9uX2lkIjoiYmI2NmEyNzAtNjFkYS00ZTUxLTlmMGMtMmY2NWJkZTIzMzdlIiwiZmVhdHVyZXMiOlsiYWR2YW5jZWRfbWV0YWRhdGEiLCJiYXRjaF9lZGl0aW5nIiwicHJlc2V0cyJdLCJ2ZXJzaW9uX2VudGl0bGVtZW50Ijp7InBvbGljeSI6ImFsbF92ZXJzaW9ucyIsImN1cnJlbnRfdmVyc2lvbiI6bnVsbH19.o8ZMVRwfcvBUKMn551TDiVHvCTERn_Y0DMhRBGulQ_1Ch79sWiORYATpttP4uWCIr3BGiQ-T9cVC-IZ5EXXlDA",
+      "expected_state": "invalid",
+      "authorized": false,
+      "expected_reason": "invalid_entitlement_signature"
+    },
+    {
+      "name": "wrong_issuer",
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InNoYXJlZC1wYXJpdHktdmVjdG9yIiwidHlwIjoiRExULUVOVElUTEVNRU5UK2p3dCIsInYiOjF9.eyJzY2hlbWFfdmVyc2lvbiI6MSwiaXNzIjoiaHR0cHM6Ly93cm9uZy5leGFtcGxlIiwiYXVkIjoibWV0YXR3ZWFrIiwic3ViIjoic2hhcmVkLWxpY2Vuc2UtaWQiLCJqdGkiOiI4ZDJiYzQyZS05ZDBmLTRlNzgtOTE5Mi05M2U2M2Y0M2QxN2MiLCJpYXQiOjEwMDAsInJlZnJlc2hfYWZ0ZXIiOjMwMDAsImF1dGhvcml6YXRpb24iOnsia2luZCI6InBlcnBldHVhbCIsImV4cGlyZXNfYXQiOm51bGx9LCJwcm9kdWN0X2lkIjoibWV0YXR3ZWFrIiwiZWRpdGlvbl9pZCI6InBybyIsImxpY2Vuc2VfdHlwZSI6InBlcnBldHVhbCIsImFjdGl2YXRpb25fcmVxdWlyZWQiOnRydWUsImFjdGl2YXRpb25fbGltaXQiOjMsImluc3RhbGxhdGlvbl9pZCI6IjhiNjZhMjcwLTYxZGEtNGU1MS05ZjBjLTJmNjViZGUyMzM3ZSIsImFjdGl2YXRpb25faWQiOiJiYjY2YTI3MC02MWRhLTRlNTEtOWYwYy0yZjY1YmRlMjMzN2UiLCJmZWF0dXJlcyI6WyJhZHZhbmNlZF9tZXRhZGF0YSIsImJhdGNoX2VkaXRpbmciLCJwcmVzZXRzIl0sInZlcnNpb25fZW50aXRsZW1lbnQiOnsicG9saWN5IjoiYWxsX3ZlcnNpb25zIiwiY3VycmVudF92ZXJzaW9uIjpudWxsfX0.UgdAc09ysvlfNM5TOp4hZDXiE4UTI6o-Sha2_jLLdJBRHFcUcqG91HQWoeL835KP77vNrtiqVR9H_kuyk_CvAw",
+      "expected_state": "invalid",
+      "authorized": false,
+      "expected_reason": "entitlement_issuer_mismatch"
+    },
+    {
+      "name": "wrong_installation",
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InNoYXJlZC1wYXJpdHktdmVjdG9yIiwidHlwIjoiRExULUVOVElUTEVNRU5UK2p3dCIsInYiOjF9.eyJzY2hlbWFfdmVyc2lvbiI6MSwiaXNzIjoiaHR0cHM6Ly9saWNlbnNpbmctbm9ucHJvZC5kcmlmdGxpbmV0ZWNoLmNvbSIsImF1ZCI6Im1ldGF0d2VhayIsInN1YiI6InNoYXJlZC1saWNlbnNlLWlkIiwianRpIjoiOGQyYmM0MmUtOWQwZi00ZTc4LTkxOTItOTNlNjNmNDNkMTdjIiwiaWF0IjoxMDAwLCJyZWZyZXNoX2FmdGVyIjozMDAwLCJhdXRob3JpemF0aW9uIjp7ImtpbmQiOiJwZXJwZXR1YWwiLCJleHBpcmVzX2F0IjpudWxsfSwicHJvZHVjdF9pZCI6Im1ldGF0d2VhayIsImVkaXRpb25faWQiOiJwcm8iLCJsaWNlbnNlX3R5cGUiOiJwZXJwZXR1YWwiLCJhY3RpdmF0aW9uX3JlcXVpcmVkIjp0cnVlLCJhY3RpdmF0aW9uX2xpbWl0IjozLCJpbnN0YWxsYXRpb25faWQiOiIwMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwMDAiLCJhY3RpdmF0aW9uX2lkIjoiYmI2NmEyNzAtNjFkYS00ZTUxLTlmMGMtMmY2NWJkZTIzMzdlIiwiZmVhdHVyZXMiOlsiYWR2YW5jZWRfbWV0YWRhdGEiLCJiYXRjaF9lZGl0aW5nIiwicHJlc2V0cyJdLCJ2ZXJzaW9uX2VudGl0bGVtZW50Ijp7InBvbGljeSI6ImFsbF92ZXJzaW9ucyIsImN1cnJlbnRfdmVyc2lvbiI6bnVsbH19.2GiDmO8g4b1W0GmkaI-JauW2GPSJQ1MfMUwGvs--d5M4O7CtoIshhTWgAF7rkN2fnJk3Z4IAsfzxRI0cDCnPAg",
+      "expected_state": "invalid",
+      "authorized": false,
+      "expected_reason": "entitlement_installation_mismatch"
+    }
+  ],
+  "validation_failure_cases": [
+    {
+      "name": "network_timeout",
+      "kind": "timeout",
+      "attempt": 0,
+      "expected_state": "stale_but_authorized",
+      "preserve_authorization": true,
+      "retry_after_seconds": 3600
+    },
+    {
+      "name": "dns_failure",
+      "kind": "network",
+      "attempt": 1,
+      "expected_state": "stale_but_authorized",
+      "preserve_authorization": true,
+      "retry_after_seconds": 21600
+    },
+    {
+      "name": "rate_limited",
+      "kind": "api",
+      "code": "rate_limited",
+      "status": 429,
+      "retry_after_seconds": 900,
+      "attempt": 0,
+      "expected_state": "stale_but_authorized",
+      "preserve_authorization": true
+    },
+    {
+      "name": "server_error",
+      "kind": "api",
+      "code": "request_failed",
+      "status": 503,
+      "attempt": 2,
+      "expected_state": "stale_but_authorized",
+      "preserve_authorization": true,
+      "retry_after_seconds": 86400
+    },
+    {
+      "name": "revoked",
+      "kind": "api",
+      "code": "license_revoked",
+      "status": 403,
+      "attempt": 0,
+      "expected_state": "revoked",
+      "preserve_authorization": false
+    },
+    {
+      "name": "suspended",
+      "kind": "api",
+      "code": "license_suspended",
+      "status": 403,
+      "attempt": 0,
+      "expected_state": "suspended",
+      "preserve_authorization": false
+    },
+    {
+      "name": "refunded",
+      "kind": "api",
+      "code": "entitlement_refunded",
+      "status": 403,
+      "attempt": 0,
+      "expected_state": "refunded",
+      "preserve_authorization": false
+    },
+    {
+      "name": "invalid_activation",
+      "kind": "api",
+      "code": "invalid_activation",
+      "status": 401,
+      "attempt": 0,
+      "expected_state": "invalid_activation",
+      "preserve_authorization": false
+    },
+    {
+      "name": "authoritative_denial",
+      "kind": "api",
+      "code": "license_denied",
+      "status": 403,
+      "attempt": 0,
+      "expected_state": "server_denied",
+      "preserve_authorization": false
+    }
+  ]
+}

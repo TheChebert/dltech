@@ -1,4 +1,5 @@
 import { generateKeyPairSync, sign } from "node:crypto";
+import { readFileSync } from "node:fs";
 
 import { describe, expect, it, vi } from "vitest";
 
@@ -11,9 +12,69 @@ import {
   resolveLocalAccess,
   validationRetryDelaySeconds,
   verifyEntitlementToken,
+  type EntitlementEvaluation,
   type EntitlementPayload,
+  type EntitlementVerificationOptions,
   type Jwks,
+  type ValidationDisposition,
 } from "./index";
+
+type SharedVectors = {
+  evaluation: { issuer: string; product_id: string; installation_id: string; now: number };
+  jwks: Jwks;
+  entitlement_cases: Array<{
+    name: string;
+    token: string;
+    expected_state: EntitlementEvaluation["state"];
+    authorized: boolean;
+    expected_reason?: string;
+  }>;
+  validation_failure_cases: Array<{
+    name: string;
+    kind: "api" | "timeout" | "network";
+    code?: string;
+    status?: number;
+    attempt: number;
+    expected_state: ValidationDisposition["state"];
+    preserve_authorization: boolean;
+    retry_after_seconds?: number;
+  }>;
+};
+
+const sharedVectors = JSON.parse(readFileSync(
+  new URL("../../../contracts/licensing/protocol-v1.test-vectors.json", import.meta.url),
+  "utf8",
+)) as SharedVectors;
+
+describe("shared protocol v1 parity vectors", () => {
+  it.each(sharedVectors.entitlement_cases)("evaluates $name identically", async (testCase) => {
+    const result = await evaluateEntitlementToken(testCase.token, sharedVectors.jwks, {
+      productId: sharedVectors.evaluation.product_id,
+      issuer: sharedVectors.evaluation.issuer,
+      installationId: sharedVectors.evaluation.installation_id,
+      now: sharedVectors.evaluation.now,
+    });
+    expect(result.state).toBe(testCase.expected_state);
+    expect(result.authorized).toBe(testCase.authorized);
+    if (testCase.expected_reason) expect(result).toMatchObject({ reason: testCase.expected_reason });
+  });
+
+  it.each(sharedVectors.validation_failure_cases)("classifies $name identically", (testCase) => {
+    const error = testCase.kind === "api"
+      ? new DriftlineApiError(
+          testCase.code ?? "request_failed",
+          testCase.status ?? 500,
+          testCase.name === "rate_limited" ? testCase.retry_after_seconds : undefined,
+        )
+      : new TypeError(testCase.kind === "timeout" ? "request timed out" : "network unavailable");
+    const result = classifyValidationFailure(error, testCase.attempt);
+    expect(result.state).toBe(testCase.expected_state);
+    expect(result.preserveAuthorization).toBe(testCase.preserve_authorization);
+    if (testCase.preserve_authorization && testCase.retry_after_seconds) {
+      expect(result).toMatchObject({ retryAfterSeconds: testCase.retry_after_seconds });
+    }
+  });
+});
 
 function perpetualPayload(overrides: Partial<EntitlementPayload> = {}): EntitlementPayload {
   return {
@@ -55,7 +116,12 @@ describe("licensing SDK local-first baseline", () => {
   });
 
   it("requires no token, account, license key, activation, or JWKS for baseline access", async () => {
-    const result = await resolveLocalAccess({ productId: "metatweak", entitlementToken: null, verificationKeys: null });
+    const result = await resolveLocalAccess({
+      productId: "metatweak",
+      issuer: "https://driftlinetech.com",
+      entitlementToken: null,
+      verificationKeys: null,
+    });
     expect(result.state).toBe("baseline");
   });
 
@@ -68,7 +134,11 @@ describe("licensing SDK local-first baseline", () => {
 
   it("falls back to the baseline when verification material is absent", async () => {
     const { token } = createToken(perpetualPayload());
-    await expect(resolveLocalAccess({ productId: "metatweak", entitlementToken: token })).resolves.toEqual({
+    await expect(resolveLocalAccess({
+      productId: "metatweak",
+      issuer: "https://driftlinetech.com",
+      entitlementToken: token,
+    })).resolves.toEqual({
       state: "baseline",
       reason: "verification_keys_missing",
     });
@@ -80,6 +150,7 @@ describe("licensing SDK offline certificate evaluation", () => {
     const { token, jwks } = createToken(perpetualPayload());
     const result = await evaluateEntitlementToken(token, jwks, {
       productId: "metatweak",
+      issuer: "https://driftlinetech.com",
       installationId: perpetualPayload().installation_id!,
       now: 1500,
     });
@@ -92,12 +163,14 @@ describe("licensing SDK offline certificate evaluation", () => {
     const { token, jwks } = createToken(payload);
     const result = await evaluateEntitlementToken(token, jwks, {
       productId: "metatweak",
+      issuer: "https://driftlinetech.com",
       installationId: payload.installation_id!,
       now: 5000,
     });
     expect(result).toMatchObject({ state: "refresh_due", authorized: true });
     await expect(verifyEntitlementToken(token, jwks, {
       productId: "metatweak",
+      issuer: "https://driftlinetech.com",
       installationId: payload.installation_id!,
       now: 5000,
     })).resolves.toMatchObject({ edition_id: "pro" });
@@ -111,6 +184,7 @@ describe("licensing SDK offline certificate evaluation", () => {
     const { token, jwks } = createToken(legacy);
     const result = await evaluateEntitlementToken(token, jwks, {
       productId: "metatweak",
+      issuer: "https://driftlinetech.com",
       installationId: payload.installation_id!,
       now: 5000,
     });
@@ -122,6 +196,7 @@ describe("licensing SDK offline certificate evaluation", () => {
     const { token, jwks } = createToken(payload);
     const local = await resolveLocalAccess({
       productId: "metatweak",
+      issuer: "https://driftlinetech.com",
       installationId: payload.installation_id!,
       entitlementToken: token,
       verificationKeys: jwks,
@@ -140,6 +215,7 @@ describe("licensing SDK offline certificate evaluation", () => {
     const { token, jwks } = createToken(payload);
     const result = await evaluateEntitlementToken(token, jwks, {
       productId: "metatweak",
+      issuer: "https://driftlinetech.com",
       installationId: payload.installation_id!,
       now: 1500,
     });
@@ -156,12 +232,14 @@ describe("licensing SDK offline certificate evaluation", () => {
     const { token, jwks } = createToken(payload);
     const result = await evaluateEntitlementToken(token, jwks, {
       productId: "metatweak",
+      issuer: "https://driftlinetech.com",
       installationId: payload.installation_id!,
       now: 3000,
     });
     expect(result).toMatchObject({ state: "expired_time_limited", authorized: false });
     await expect(verifyEntitlementToken(token, jwks, {
       productId: "metatweak",
+      issuer: "https://driftlinetech.com",
       installationId: payload.installation_id!,
       now: 3000,
     })).rejects.toThrow("entitlement_expired");
@@ -176,9 +254,27 @@ describe("licensing SDK offline certificate evaluation", () => {
     const { token, jwks } = createToken(payload);
     await expect(evaluateEntitlementToken(token, jwks, {
       productId: "metatweak",
+      issuer: "https://driftlinetech.com",
       installationId: payload.installation_id!,
       now: 2000,
     })).resolves.toMatchObject({ state: "expired_time_limited" });
+  });
+
+  it("rejects a malformed signed authorization object", async () => {
+    const payload = perpetualPayload({
+      authorization: { kind: "unexpected", expires_at: null } as unknown as EntitlementPayload["authorization"],
+    });
+    const { token, jwks } = createToken(payload);
+    await expect(evaluateEntitlementToken(token, jwks, {
+      productId: "metatweak",
+      issuer: "https://driftlinetech.com",
+      installationId: payload.installation_id!,
+      now: 1500,
+    })).resolves.toMatchObject({
+      state: "invalid",
+      authorized: false,
+      reason: "entitlement_authorization_invalid",
+    });
   });
 
   it("rejects a tampered payload", async () => {
@@ -188,6 +284,7 @@ describe("licensing SDK offline certificate evaluation", () => {
     const tamperedBody = Buffer.from(JSON.stringify({ ...payload, edition_id: "pro-plus" })).toString("base64url");
     const result = await evaluateEntitlementToken([header, tamperedBody, signature].join("."), jwks, {
       productId: "metatweak",
+      issuer: "https://driftlinetech.com",
       installationId: payload.installation_id!,
       now: 1500,
     });
@@ -197,9 +294,23 @@ describe("licensing SDK offline certificate evaluation", () => {
   it("rejects a product mismatch", async () => {
     const payload = perpetualPayload();
     const { token, jwks } = createToken(payload);
-    await expect(evaluateEntitlementToken(token, jwks, { productId: "another-product", now: 1500 })).resolves.toMatchObject({
+    await expect(evaluateEntitlementToken(token, jwks, { productId: "another-product", issuer: "https://driftlinetech.com", now: 1500 })).resolves.toMatchObject({
       state: "invalid",
       reason: "entitlement_product_mismatch",
+    });
+  });
+
+  it("rejects paid material when the expected issuer is omitted", async () => {
+    const payload = perpetualPayload();
+    const { token, jwks } = createToken(payload);
+    const missingIssuer = {
+      productId: "metatweak",
+      installationId: payload.installation_id!,
+      now: 1500,
+    } as unknown as EntitlementVerificationOptions;
+    await expect(evaluateEntitlementToken(token, jwks, missingIssuer)).resolves.toMatchObject({
+      state: "invalid",
+      reason: "entitlement_issuer_mismatch",
     });
   });
 
@@ -207,6 +318,7 @@ describe("licensing SDK offline certificate evaluation", () => {
     const { token, jwks } = createToken(perpetualPayload());
     await expect(evaluateEntitlementToken(token, jwks, {
       productId: "metatweak",
+      issuer: "https://driftlinetech.com",
       installationId: "1b66a270-61da-4e51-9f0c-2f65bde2337e",
       now: 1500,
     })).resolves.toMatchObject({ state: "invalid", reason: "entitlement_installation_mismatch" });
@@ -285,7 +397,12 @@ describe("client refresh responses", () => {
       entitlement: payload,
       verificationKeys: signed.jwks,
     }), { status: 200, headers: { "content-type": "application/json" } })) as unknown as typeof fetch;
-    const client = createDriftlineClient({ baseUrl: "https://example.test", productId: "metatweak", fetch: request });
+    const client = createDriftlineClient({
+      baseUrl: "https://example.test",
+      productId: "metatweak",
+      issuer: "https://driftlinetech.com",
+      fetch: request,
+    });
     const response = await client.validate({
       activationToken: "a".repeat(32),
       installationId: payload.installation_id!,
@@ -295,6 +412,7 @@ describe("client refresh responses", () => {
     expect(response.verificationKeys).toEqual(signed.jwks);
     await expect(evaluateEntitlementToken(response.entitlementToken, response.verificationKeys, {
       productId: "metatweak",
+      issuer: "https://driftlinetech.com",
       installationId: payload.installation_id!,
       now: 3500,
     })).resolves.toMatchObject({ state: "valid_perpetual", authorized: true });

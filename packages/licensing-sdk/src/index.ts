@@ -38,6 +38,13 @@ export type ValidationDisposition =
   | { state: "stale_but_authorized"; preserveAuthorization: true; retryAfterSeconds: number }
   | { state: "revoked" | "suspended" | "refunded" | "invalid_activation" | "server_denied"; preserveAuthorization: false; reason: string };
 
+export type EntitlementVerificationOptions = {
+  productId: string;
+  issuer: string;
+  installationId?: string;
+  now?: number;
+};
+
 export class DriftlineApiError extends Error {
   constructor(
     public readonly code: string,
@@ -72,7 +79,11 @@ function normalizePayload(payload: LegacyCompatiblePayload): EntitlementPayload 
     else throw new Error("entitlement_authorization_invalid");
   }
 
-  if (authorization.kind === "time_limited" && !Number.isFinite(authorization.expires_at)) {
+  if (
+    (authorization.kind !== "perpetual" && authorization.kind !== "time_limited") ||
+    (authorization.kind === "perpetual" && authorization.expires_at !== null) ||
+    (authorization.kind === "time_limited" && !Number.isFinite(authorization.expires_at))
+  ) {
     throw new Error("entitlement_authorization_invalid");
   }
 
@@ -86,7 +97,7 @@ function normalizePayload(payload: LegacyCompatiblePayload): EntitlementPayload 
 async function verifySignedPayload(
   token: string,
   jwks: Jwks,
-  options: { productId: string; installationId?: string; now?: number },
+  options: EntitlementVerificationOptions,
 ) {
   const [encodedHeader, encodedPayload, encodedSignature, extra] = token.split(".");
   if (!encodedHeader || !encodedPayload || !encodedSignature || extra) throw new Error("invalid_entitlement_token");
@@ -105,6 +116,7 @@ async function verifySignedPayload(
 
   const payload = normalizePayload(decodeJson<LegacyCompatiblePayload>(encodedPayload));
   const now = options.now ?? Math.floor(Date.now() / 1000);
+  if (!options.issuer || payload.iss !== options.issuer) throw new Error("entitlement_issuer_mismatch");
   if (payload.schema_version !== 1 || payload.product_id !== options.productId || payload.aud !== options.productId) {
     throw new Error("entitlement_product_mismatch");
   }
@@ -118,7 +130,7 @@ async function verifySignedPayload(
 export async function evaluateEntitlementToken(
   token: string,
   jwks: Jwks,
-  options: { productId: string; installationId?: string; now?: number },
+  options: EntitlementVerificationOptions,
 ): Promise<EntitlementEvaluation> {
   try {
     const { payload, now } = await verifySignedPayload(token, jwks, options);
@@ -139,7 +151,7 @@ export async function evaluateEntitlementToken(
 export async function verifyEntitlementToken(
   token: string,
   jwks: Jwks,
-  options: { productId: string; installationId?: string; now?: number },
+  options: EntitlementVerificationOptions,
 ) {
   const evaluation = await evaluateEntitlementToken(token, jwks, options);
   if (evaluation.state === "invalid") throw new Error(evaluation.reason);
@@ -149,6 +161,7 @@ export async function verifyEntitlementToken(
 
 export async function resolveLocalAccess(input: {
   productId: string;
+  issuer?: string;
   installationId?: string;
   entitlementToken?: string | null;
   verificationKeys?: Jwks | null;
@@ -156,7 +169,13 @@ export async function resolveLocalAccess(input: {
 }): Promise<LocalAccessState> {
   if (!input.entitlementToken) return { state: "baseline", reason: "no_paid_entitlement" };
   if (!input.verificationKeys) return { state: "baseline", reason: "verification_keys_missing" };
-  const evaluation = await evaluateEntitlementToken(input.entitlementToken, input.verificationKeys, input);
+  if (!input.issuer) return { state: "baseline", reason: "invalid_entitlement" };
+  const evaluation = await evaluateEntitlementToken(input.entitlementToken, input.verificationKeys, {
+    productId: input.productId,
+    issuer: input.issuer,
+    installationId: input.installationId,
+    now: input.now,
+  });
   if (evaluation.authorized) {
     return { state: "entitled", entitlement: evaluation.entitlement, refreshDue: evaluation.state === "refresh_due" };
   }
@@ -207,9 +226,10 @@ export function classifyValidationFailure(error: unknown, attempt = 0): Validati
 type Proof = { installationId: string; platform: string; appVersion: string };
 type EntitlementResponse = { entitlementToken: string; entitlement: EntitlementPayload; verificationKeys: Jwks };
 
-export function createDriftlineClient(config: { baseUrl: string; productId: string; fetch?: typeof fetch }) {
+export function createDriftlineClient(config: { baseUrl: string; productId: string; issuer?: string; fetch?: typeof fetch }) {
   const requestFetch = config.fetch ?? fetch;
   const baseUrl = config.baseUrl.replace(/\/$/, "");
+  const issuer = config.issuer ?? baseUrl;
   async function post<T>(path: string, body: Record<string, unknown>): Promise<T> {
     const response = await requestFetch(baseUrl + path, {
       method: "POST",
@@ -233,6 +253,7 @@ export function createDriftlineClient(config: { baseUrl: string; productId: stri
     return { productId: config.productId, ...value, nonce: crypto.randomUUID(), timestamp: new Date().toISOString() };
   }
   return {
+    issuer,
     /** Optional diagnostics/synchronization only. Built-in Free must never depend on this call. */
     resolveFree(appVersion: string, editionId = "free") {
       return post<EntitlementResponse>("/api/v1/entitlements/resolve", { productId: config.productId, editionId, appVersion });

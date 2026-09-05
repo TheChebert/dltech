@@ -60,9 +60,15 @@ An application's Free baseline must work on a first-ever offline launch without 
 
 A perpetual activation produces an installation-bound signed durable authorization certificate. Its centrally configured `refresh_after` schedules opportunistic validation and is not a hard local expiration. Temporary or prolonged network loss, timeout, rate limiting, or server failure must preserve an already valid perpetual authorization. Paid access is removed after a definitive successful server denial such as revocation, suspension, refund, or invalid/deactivated activation. Trials and subscriptions retain authoritative hard expiry.
 
+### Supported client packages and contracts
+
+Driftline Licensing API v1 / protocol specification 1.1.0 is implemented by `@driftline/licensing-sdk` 1.1.x and the native .NET 8 package `Driftline.Licensing` 1.0.x. Both SDKs consume shared language-neutral fixtures and validate the exact entitlement issuer, product/audience, installation binding, signature, public-key structure, and timing. Native applications must consume the first-party package rather than copy or translate the state machine.
+
+MetaTweak uses `contracts/products/metatweak.v2.json` and the reproducible `metatweak-integration` 2.0.0 bundle. Contract files define stable capability boundaries but contain no authoritative price, activation allowance, provider IDs, issuance rules, or refresh configuration.
+
 ---
 
-##STRIPE COMMERCE INTEGRATION
+## STRIPE COMMERCE INTEGRATION
 
 Driftline will use Stripe as the payment processor for software purchases.
 

@@ -43,12 +43,23 @@ begin
     where edition_id = v_pro_edition_id and provider = 'stripe' and environment = 'test'
       and currency = 'USD' and amount_minor = 1499 and billing_interval = 'one_time'
   ) then raise exception 'Pro price configuration is invalid'; end if;
-  if (select count(*) from public.edition_features where edition_id = v_free_edition_id) <> 4 then
+  if (select count(*) from public.edition_features where edition_id = v_free_edition_id) <> 1 then
     raise exception 'Free feature grant count is invalid';
   end if;
-  if (select count(*) from public.edition_features where edition_id = v_pro_edition_id) <> 11 then
+  if (select count(*) from public.edition_features where edition_id = v_pro_edition_id) <> 9 then
     raise exception 'Pro feature grant count is invalid';
   end if;
+  if exists (
+    select 1 from public.edition_features grants
+    join public.features features on features.id = grants.feature_id
+    where grants.edition_id in (v_free_edition_id, v_pro_edition_id)
+      and features.feature_key in ('all_file_types', 'file_attributes', 'backup_controls', 'advanced_operations')
+  ) then raise exception 'Deprecated features remain granted'; end if;
+  if not exists (
+    select 1 from public.edition_features grants
+    join public.features features on features.id = grants.feature_id
+    where grants.edition_id = v_pro_edition_id and features.feature_key = 'extended_file_type_editing'
+  ) then raise exception 'Extended file-type editing is not granted to Pro'; end if;
 
   insert into public.orders (
     id, provider, provider_order_id, status, currency, subtotal_minor, total_minor, customer_email

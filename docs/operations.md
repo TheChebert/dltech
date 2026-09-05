@@ -7,6 +7,7 @@ Public configuration:
 - `NEXT_PUBLIC_SITE_URL`
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+- `DRIFTLINE_API_ONLY` (`true` only on the dedicated licensing API project)
 
 Server-only configuration:
 
@@ -24,9 +25,15 @@ Contact email configuration remains optional for the contact workflow. Never cop
 
 ## Database deployment
 
-Apply migrations in filename order to a non-production Supabase project first. Migration `20260902010000_commerce_entitlements.sql` adds the generic commerce/entitlement model, transactional functions, RLS, and MetaTweak configuration. It intentionally leaves the external Stripe Product and Price IDs null; follow `stripe-test-setup.md` after applying it.
+Apply migrations in filename order to a non-production Supabase project first. Migration `20260902010000_commerce_entitlements.sql` adds the generic commerce/entitlement model, transactional functions, RLS, and initial MetaTweak configuration. Migration `20260904010000_metatweak_contract_v2.sql` adds truthful generic capability IDs, deprecates ambiguous v1 IDs without dropping history, and resets Free/Pro grants to contract v2.
 
 The same migration stores `refresh_interval_days` as edition configuration. This value schedules validation; it is not a hard expiration for perpetual authorization.
+
+Guard the linked project ref before every remote action. For the current non-production project it must be exactly `kxamksngwlircmycenjb`. Dry-run `npx supabase db push --linked --dry-run`, apply with `npx supabase db push --linked`, then run the rollback test without Docker using `npx supabase db query --linked --file supabase/tests/commerce_entitlements.sql`.
+
+## Dedicated desktop non-production API
+
+Project `dltech-licensing-nonprod` is intentionally separate from the website project. Its production domain is `https://dltech-licensing-nonprod.vercel.app`; Vercel Standard Protection keeps previews protected while the production domain is public. Configure only the non-production Supabase URL/publishable/server keys, Ed25519 private key and key ID, the exact issuer/site URL, and `DRIFTLINE_API_ONLY=true`. Do not copy Stripe, admin-issuance, Vercel-bypass, or production/shared Supabase credentials. The proxy allowlist exposes only health, JWKS, optional Free resolution, activation, validation, and deactivation.
 
 ## Key generation
 

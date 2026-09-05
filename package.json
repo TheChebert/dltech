@@ -14,7 +14,12 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "sdk:typecheck": "tsc -p packages/licensing-sdk/tsconfig.json --noEmit"
+    "sdk:typecheck": "tsc -p packages/licensing-sdk/tsconfig.json --noEmit",
+    "sdk:dotnet:build": "dotnet build packages/Driftline.Licensing/Driftline.Licensing.csproj --configuration Release",
+    "sdk:dotnet:test": "dotnet test packages/Driftline.Licensing.Tests/Driftline.Licensing.Tests.csproj --configuration Release",
+    "sdk:dotnet:pack": "dotnet pack packages/Driftline.Licensing/Driftline.Licensing.csproj --configuration Release --output artifacts/nuget",
+    "contracts:bundle": "node tools/build-metatweak-integration-bundle.mjs",
+    "contracts:fixtures": "node tools/generate-licensing-test-vectors.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

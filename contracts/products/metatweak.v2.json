@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "contract_version": 2,
+  "supersedes": "metatweak.v1",
+  "product_id": "metatweak",
+  "licensing_api_version": "v1",
+  "licensing_protocol_specification": "1.1.0",
+  "compatible_sdks": {
+    "dotnet": "Driftline.Licensing >=1.0.0 <2.0.0",
+    "typescript": "@driftline/licensing-sdk >=1.1.0 <2.0.0"
+  },
+  "edition_ids": ["free", "pro"],
+  "feature_ids": [
+    "document_metadata",
+    "advanced_metadata",
+    "extended_file_type_editing",
+    "datetime_editing",
+    "advanced_backup_controls",
+    "backup_auto_cleanup",
+    "batch_editing",
+    "presets",
+    "explorer_integration"
+  ],
+  "free_baseline": {
+    "network_requirement": "none",
+    "licensing_dependency": "none",
+    "capabilities": [
+      "Open and inspect every currently supported file type.",
+      "Preview, inspection, search, themes, accessibility, and other normal application usability.",
+      "Single-file operations.",
+      "Basic Office document metadata editing for Title, Subject, Author, Keywords, Comments, Category, and Company.",
+      "Mandatory safe backups where an edit requires them, plus normal history and undo safety."
+    ],
+    "implementation_rule": "Free is compiled into MetaTweak. No token, account, license key, activation, JWKS, API call, or feature-grant response may gate startup or these capabilities."
+  },
+  "feature_boundaries": {
+    "document_metadata": {
+      "edition": "free",
+      "capabilities": ["Title", "Subject", "Author", "Keywords", "Comments", "Category", "Company"],
+      "client_rule": "This ID may appear in optional resolver output but mirrors the local Free baseline and must never be required to unlock it."
+    },
+    "advanced_metadata": {
+      "edition": "pro",
+      "capabilities": ["Last Saved By", "Manager", "Revision Number", "Total Editing Time", "PDF Creator", "embedded version-label removal"]
+    },
+    "extended_file_type_editing": {
+      "edition": "pro",
+      "capabilities": ["Embedded metadata editing for PDF", "Embedded metadata editing for JPEG, JPG, TIFF, and TIF", "future non-Office embedded formats explicitly added to this capability"],
+      "free_exclusions": "Opening, inspection, and basic filesystem information are not gated. Basic Office document metadata editing remains Free."
+    },
+    "datetime_editing": {
+      "edition": "pro",
+      "capabilities": ["Filesystem timestamp editing", "supported embedded date/time editing", "copy-date utilities"]
+    },
+    "advanced_backup_controls": {
+      "edition": "pro",
+      "capabilities": ["Configurable backup behavior", "disable-backup options only where the application declares them safe", "backup management options"],
+      "free_exclusions": "Mandatory safety backups, normal history, and undo remain Free."
+    },
+    "backup_auto_cleanup": {
+      "edition": "pro",
+      "capabilities": ["Automatic cleanup and retention management for safety backups"]
+    },
+    "batch_editing": {
+      "edition": "pro",
+      "capabilities": ["Apply supported changes across multiple files"]
+    },
+    "presets": {
+      "edition": "pro",
+      "capabilities": ["Save and reuse editing presets or templates"]
+    },
+    "explorer_integration": {
+      "edition": "pro",
+      "capabilities": ["Windows Explorer context-menu and Open With workflow integration"],
+      "lifecycle": {
+        "free_installation": "Do not register or expose paid shell commands.",
+        "activated_pro": "Register per-user shell entries after a valid entitlement is available, or enable installed infrastructure only then.",
+        "pro_deactivation_or_fallback": "Remove or disable paid shell entries and return to the Free baseline without misleading non-functional commands.",
+        "portable": "Do not register shell integration."
+      }
+    }
+  },
+  "deprecated_feature_ids": {
+    "all_file_types": "Replaced by extended_file_type_editing; opening and inspection are never gated.",
+    "file_attributes": "Not implemented in the current product and is not granted or consumed.",
+    "backup_controls": "Replaced by advanced_backup_controls; basic safety backups remain Free.",
+    "advanced_operations": "Too broad. Copy date maps to datetime_editing, version-label removal maps to advanced_metadata, and history/undo remain Free."
+  },
+  "required_client_state": {
+    "installation_id": "Persist a random UUID generated once per installed application instance.",
+    "activation_token": "Persist securely only after successful Pro activation; use for validate and deactivate.",
+    "entitlement_token": "Cache only after successful paid activation or validation; absence always falls back to the built-in Free baseline.",
+    "verification_keys": "Cache the public verification keys returned with successful paid activation or validation.",
+    "last_validation": "Optional local scheduling metadata only; it is not authorization for a perpetual license."
+  },
+  "endpoints": {
+    "resolve_free": "/api/v1/entitlements/resolve",
+    "activate": "/api/v1/licenses/activate",
+    "validate": "/api/v1/licenses/validate",
+    "deactivate": "/api/v1/licenses/deactivate",
+    "jwks": "/api/v1/licensing/jwks"
+  },
+  "optional_endpoints": ["resolve_free", "jwks"],
+  "prohibited_client_dependencies": [
+    "database table names or queries",
+    "Supabase service or secret keys",
+    "Stripe Product or Price IDs",
+    "entitlement signing private keys",
+    "server license-key encryption keys",
+    "price, activation-limit, refresh timing, or server feature-grant business rules"
+  ]
+}

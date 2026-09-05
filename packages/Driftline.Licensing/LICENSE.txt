@@ -1,0 +1,4 @@
+Copyright (c) Driftline Tech. All rights reserved.
+
+This package is provided for use with authorized Driftline products. Redistribution,
+publication, sublicensing, or sale requires prior written permission from Driftline Tech.

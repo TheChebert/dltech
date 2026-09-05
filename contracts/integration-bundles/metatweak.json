@@ -1,0 +1,20 @@
+{
+  "bundle_id": "metatweak-integration",
+  "bundle_version": "2.0.0",
+  "product_id": "metatweak",
+  "contract": "metatweak.v2",
+  "licensing_api_version": "v1",
+  "licensing_protocol_specification": "1.1.0",
+  "sdk_versions": {
+    "Driftline.Licensing": "1.0.0",
+    "@driftline/licensing-sdk": "1.1.0"
+  },
+  "files": [
+    "DRIFTLINE_PLATFORM.md",
+    "docs/licensing-protocol.md",
+    "docs/metatweak-integration.md",
+    "contracts/products/metatweak.v1.json",
+    "contracts/products/metatweak.v2.json",
+    "packages/Driftline.Licensing/README.md"
+  ]
+}

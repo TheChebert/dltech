@@ -11,6 +11,7 @@
 - SHA-256 license and installation lookup hashes
 - AES-256-GCM authenticated encryption for recoverable license delivery
 - Ed25519 signed offline entitlements with a public JWKS endpoint
+- Exact issuer, product/audience, installation, token-header, and Ed25519 JWK structure validation in both first-party SDKs
 - Opaque hashed activation tokens; validation does not resend the license key
 - Atomic activation-limit enforcement under a license row lock
 - Timestamp freshness, nonce replay protection, and route rate limits
@@ -21,6 +22,8 @@
 ## Client prohibitions
 
 Desktop and public client code must never contain Supabase secret/service keys, Stripe secret or webhook keys, the entitlement private key, the license encryption key, the admin API key, database queries, provider IDs, prices, activation limits, or edition feature maps. The public Supabase publishable key may be used only where RLS explicitly permits public reads.
+
+Desktop clients must never embed Vercel deployment-protection or automation-bypass secrets. Native non-production testing uses a separate public production domain on an API-only project; previews and unrelated surfaces remain protected.
 
 ## Key rotation
 

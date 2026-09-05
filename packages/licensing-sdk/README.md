@@ -6,7 +6,7 @@ This package is the reusable client boundary for Driftline product licensing. Ap
 
 Free capability is an application-owned baseline. A first-ever launch with no network, token, account, license key, activation, or JWKS calls `resolveLocalAccess` and receives `baseline`. The optional `resolveFree` API remains available for diagnostics or synchronization; it is never an authorization prerequisite.
 
-Successful paid activation and validation return the signed entitlement and its public `verificationKeys` together. Persist both, then use `evaluateEntitlementToken` or `resolveLocalAccess` on later launches without fetching JWKS.
+Successful paid activation and validation return the signed entitlement and its public `verificationKeys` together. Persist both, then use `evaluateEntitlementToken` or `resolveLocalAccess` on later launches without fetching JWKS. SDK 1.1 requires supported integrations to pass the exact entitlement issuer during local evaluation; `createDriftlineClient` defaults its issuer to the normalized API base URL.
 
 ## Perpetual and time-limited authorization
 
@@ -16,4 +16,4 @@ Successful paid activation and validation return the signed entitlement and its 
 
 The package contains no Stripe IDs, database credentials, Supabase access, signing secrets, prices, activation counts, or product-specific feature grants.
 
-Build with `npm run build -w @driftline/licensing-sdk`.
+Version 1.1.x implements Driftline Licensing API v1 / protocol specification 1.1.0 and shares parity vectors with `Driftline.Licensing` 1.0.x. Build with `npm run build -w @driftline/licensing-sdk`.
